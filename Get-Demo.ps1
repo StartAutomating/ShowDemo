@@ -11,7 +11,7 @@ function Get-Demo {
         Get-Demo
     #>
     [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
-    param(   
+    param(
     # The name of the demo
     [Parameter(ValueFromPipelineByPropertyName,ParameterSetName='LoadedDemos')]
     [string]
@@ -26,15 +26,14 @@ function Get-Demo {
     $DemoScript
     )
     begin {
-        $ChapterExpression = '^\s(?<cn>(?:\d+\.){1,})\s{0,}'
+        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
     }
     process {
         if ($PSCmdlet.ParameterSetName -in 'DemoFile', 'DemoScript') {
             Import-Demo @psboundParameters
             return
         }
-        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
-        $filePaths = 
+        $filePaths =
             if ($myModule) {
                 $moduleRelationships = 
                                        @(
@@ -80,7 +79,7 @@ function Get-Demo {
             } else {
                 $PSScriptRoot
             }
-        $allDemoFiles = 
+        $allDemoFiles =
             $(
             # Collect all items into an input collection
             $inputCollection =$(
