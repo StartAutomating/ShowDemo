@@ -19,6 +19,17 @@ if (-not $demo.Chapters[$chapterIndex]) {
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
+        <Name>NextStep</Name>
+        <Script>
+                        $demo = $this
+$demo.CurrentStep++
+# No more steps in this chapter
+if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
+    $demo.NextChapter()
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
         <Name>Reset</Name>
         <Script>
                         $this | Add-Member NoteProperty Status "NotStarted" -Force
