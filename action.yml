@@ -289,10 +289,24 @@ runs:
         "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
         Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
             Where-Object Name -Match '(?<=\.|^)(?>demo|walkthru)\.ps1$' |
-            Export-Demo -OutputPath {
-                $_.FullName -replace '\.ps1$', '.md'
-            } |
-            . processScriptOutput
+            ForEach-Object {
+                $demoFile = $_
+                $demoFileOut = 
+                    $demoFile | 
+                        Export-Demo -OutputPath {
+                            $_.FullName -replace '\.ps1$', '.md'
+                        }
+                
+                $lastCommitMessage = 
+                    git log $demoFile.FullName -n 1 |
+                        Select-Object -ExpandProperty CommitMessage
+                "LastCommitMessage for $($demoFile.Name): $lastcommitMessage" | Out-Host
+                $demoFileOut |
+                    Add-Member NoteProperty CommitMessage $lastCommitMessage -Force -PassThru |
+                    . processScriptOutput
+            }
+            
+            
         #endregion Export-Demo
         
         $ShowDemoPS1EndStart = [DateTime]::Now
