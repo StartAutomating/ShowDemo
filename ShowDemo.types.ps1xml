@@ -194,6 +194,12 @@ $this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
+        <Name>StartChapter</Name>
+        <Script>
+                        $this | Add-Member NoteProperty CurrentStep 1 -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
         <Name>Stop</Name>
         <Script>
                         $this | Add-Member NoteProperty Status Stopped -Force
