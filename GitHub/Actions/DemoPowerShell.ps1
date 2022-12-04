@@ -227,7 +227,8 @@ if (-not $SkipShowDemoPS1) {
     }
 }
 
-git fetch  | Out-Host
+"Fetching Changes"  | Out-Host
+git fetch --unshallow  | Out-Host
 
 #region Export-Demo
 "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
