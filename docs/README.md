@@ -26,7 +26,8 @@ For an example, check out [demo.ps1](https://github.com/StartAutomating/ShowDemo
 
 ## Using the GitHub Action
 
-To use ShowDemo in a GitHub Action, simply add this line to your workflow
+To use ShowDemo in a GitHub Action, simply add this line to your workflow:
+
 ~~~yaml
 - uses: StartAutomating/ShowDemo@main
 ~~~
