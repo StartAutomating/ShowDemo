@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-16"?>
+<!-- Generated with EZOut 1.9.7: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
+<Types>
+  <Type>
+    <Name>Demo</Name>
+    <Members>
+      <ScriptMethod>
+        <Name>ColorizeStep</Name>
+        <Script>
+                        param($step)
+
+$stepTokens = [Management.Automation.PSParser]::Tokenize($step, [ref]$null)
+$PreviousToken = $null
+foreach ($_ in $stepTokens) {   
+    $content = $_.Content
+    if ($_.Type -in 'Variable', 'String') {
+        $content = $step.Substring($_.Start, $_.Length)
+    }
+    if ($PreviousToken) {
+        $token = $_
+        $prevEnd = $PreviousToken.Start + $PreviousToken.Length
+        $substring = $step.Substring($prevEnd, $token.Start -  $prevEnd)
+        if ($substring) {
+            @{InputObject=$substring}
+        }
+    }
+    
+    if ($_.Type -eq 'Comment') {
+        @{
+            ForegroundColor='Success'
+            InputObject = $content
+        }
+    }
+    elseif ($_.Type -in 'Keyword', 'String', 'CommandArgument') {
+        @{
+            ForegroundColor='Verbose'
+            InputObject = $Content
+        }
+    }
+    elseif ($_.Type -in 'Variable', 'Command') {
+        @{
+            ForegroundColor='Warning'
+            InputObject = $Content
+        }   
+    }
+    elseif ($_.Type -in 'CommandParameter') {
+        @{
+            ForegroundColor='Magenta'
+            InputObject = $Content
+        }        
+    }
+    elseif (
+        $_.Type -in 'Operator','GroupStart', 'GroupEnd'
+    ) {
+        @{
+            ForegroundColor='Magenta'
+            InputObject = $Content
+        }
+    }
+    elseif (
+        $_.Type -notin 'Comment', 
+            'Keyword', 'String', 'CommandArgument',
+            'Variable', 'Command',
+            'CommandParameter',
+            'Operator','GroupStart', 'GroupEnd'
+    )  {
+        @{
+            ForegroundColor='Output'
+            InputObject=$Content
+        }
+    } else {
+        @{
+            ForegroundColor='Output'
+            InputObject=$Content
+        }
+    }
+    $PreviousToken = $_
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Dump</Name>
+        <Script>
+                        $demoContent =
+@(foreach ($chapter in $this.Chapters) {
+    "# $($chapter.Number) $($chapter.Name)"
+    $stepIndex = 0
+    foreach ($step in $chapter.Steps) {
+        $stepIndex++
+        if ($this.CurrentChapter -eq $chapter -and $this.CurrentStep -eq $stepIndex) {
+            "    &lt;# *** You Are Here! *** #&gt;"
+        }
+        $step
+
+    }
+}) -join [Environment]::NewLine
+
+$demoContent
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>NextChapter</Name>
+        <Script>
+                        $demo = $this
+$chapterIndex = $demo.Chapters.IndexOf($demo.CurrentChapter)
+$chapterIndex++
+if (-not $demo.Chapters[$chapterIndex]) {
+    $demo | Add-Member NoteProperty DemoFinished ([datetime]::Now) -Force
+} else {
+    $demo | Add-Member NoteProperty CurrentChapter $demo.Chapters[$chapterIndex] -Force
+    $demo | Add-Member NoteProperty CurrentStep 0 -Force
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>NextStep</Name>
+        <Script>
+                        $demo = $this
+$demo.CurrentStep++
+# No more steps in this chapter
+if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
+    $demo.NextChapter()
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>ProcessInput</Name>
+        <Script>
+                        param($hostInput)
+$demo = $this
+switch ($hostInput) {
+    '?' {
+        @{
+            ForegroundColor = 'Cyan'
+            InputObject = @"
+Running demo: $($demo.Name)
+(q) Quit
+(# ...) Goto Chapter/Step
+(f ...) Find cmds using X
+(t) Timecheck
+(s) Skip
+(!) Debug Demo
+(d) Dump demo
+"@
+        }
+    }
+    'q' {
+        $demo.Stop()
+    }
+    'd' {
+        $demoDump = $demo.Dump()
+        $demoDump | Out-Host
+        if (Get-Command Set-Clipboard -ErrorAction SilentlyContinue) {
+            $demoDump | Set-Clipboard
+        }        
+    }
+    's' {
+        $demo | Add-Member NoteProperty StepToRun $null -Force
+    }
+    't' {
+        $duration = [Datetime]::now - $demo.DemoStarted
+        @{
+            ForegroundColor = 'Warning'
+            Italic = $true
+            InputObject = 
+                "{0} {1} [{2}m, {3}s]" -f $demo.Name, $demo.Status, [int]$Duration.TotalMinutes, [int]$Duration.Seconds
+        }
+    }
+    '!' {
+        Write-Warning "Debugging Demo:  Use Resume-Demo to resume."
+        $host.EnterNestedPrompt()
+        
+    }
+    default {
+        
+        if ($hostInput -match '^\s{0,}\#\s{0,}\d') {
+            $demo | Add-Member NoteProperty StepToRun $null -Force
+            $demo.SetChapter($hostInput -replace '^\s{0,}\#\s{0,}')
+        }
+        elseif ($hostInput -match '^\s{0,}(?&gt;f|/)\s{0,}\S') {
+            $toFind = $hostInput -replace '^\s{0,}(?&gt;f|/)\s{0,}'
+            Select-String -Path $demo.DemoFile -Pattern $toFind | Out-Host
+            {}
+        }
+    }        
+}
+
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Reset</Name>
+        <Script>
+                        $this | Add-Member NoteProperty Status "NotStarted" -Force
+$this | Add-Member NoteProperty StepToRun $null -Force
+$demo | Add-Member NoteProperty DemoFinished $null -Force
+$demo | Add-Member NoteProperty DemoStarted  $null -Force
+$demo | Add-Member NoteProperty CurrentChapter $null -Force
+$demo | Add-Member NoteProperty CurrentStep $null -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>SetChapter</Name>
+        <Script>
+                        param([string]$Chapter)
+
+if (-not $this.Chapters) { throw "No Chapters" }
+$chapterParts = @($chapter -split '\.')
+$potentialChapterNumbers = @(
+    if ($chapterParts.Length -gt 1) {
+        ($chapterParts[0..($chapterParts.Length - 2)] -join '\.') + '*'
+    }    
+    $chapter + '*'
+)
+
+
+
+$newChapter, $newStep = 
+    :nextChapter foreach ($chap in $this.Chapters) {
+        foreach ($potential in $potentialChapterNumbers) {
+            if ($chap.Number -like $potential) {
+                if ($potential -ne ($Chapter + '*')) {
+                    # Setting chapter and step number
+                    $chap, $chapterParts[-1] -as [int]
+                    break nextChapter
+                } else {
+                    $chap, 1
+    
+                }
+            }
+        }        
+        
+    }
+
+if (-not $newChapter) {
+    throw "Could not find chapter '$chapter'"
+}
+
+$this | Add-Member NoteProperty CurrentChapter $newChapter -Force
+$this | Add-Member NoteProperty CurrentStep ($newStep - 1) -Force
+
+
+
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>SetStatus</Name>
+        <Script>
+                        param([string]$Status)
+
+$this | Add-Member Status $status -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Start</Name>
+        <Script>
+                        $this | Add-Member NoteProperty Status Running -Force
+$this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>StartChapter</Name>
+        <Script>
+                        $this | Add-Member NoteProperty CurrentStep 1 -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Stop</Name>
+        <Script>
+                        $this | Add-Member NoteProperty Status Stopped -Force
+$this | Add-Member NoteProperty StepToRun $null -Force
+$this | Add-Member NoteProperty DemoFinished ([datetime]::Now) -Force
+$demo | Add-Member NoteProperty CurrentChapter $null -Force
+$demo | Add-Member NoteProperty CurrentStep $null -Force
+                    </Script>
+      </ScriptMethod>
+      <ScriptProperty>
+        <Name>TotalSteps</Name>
+        <GetScriptBlock>
+                        $stepCount = 0
+foreach ($chapter in $this.Chapters) {
+    $stepCount += $chapter.Steps.Length
+}
+$stepCount
+                    </GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
+  <Type>
+    <Name>Demo.Chapter</Name>
+    <Members>
+      <ScriptProperty>
+        <Name>Steps</Name>
+        <GetScriptBlock>
+                        $text = $this.Text
+$step = @()
+
+# We want every step to be able to run independently.
+# This would be untrue if the code is unbalanced when a chapter would start
+# Thus, while we're primarily looking for comments, we also need to track groups
+$groupDepth  = 0 
+for ($tokenNumber =0 ; $tokenNumber -lt $this.Tokens.Length; $tokenNumber++) {
+    $token = $this.tokens[$tokenNumber]
+    # If the token is a group start
+    if ($token.Type -eq 'GroupStart') 
+    {
+        $groupDepth++ # increment depth.
+    }
+    # If the token was a group end
+    elseif ($token.Type -eq 'GroupEnd')
+    {
+        $groupDepth-- # decrement depth.
+    }
+    # If there was no depth
+    # and the token was a comment starting in the first column.
+    elseif (                
+        (-not $groupDepth) -and            
+        $token.StartColumn -le 1
+    ) {
+        # Then it's the start of a new step
+        if ($step) {
+            $stepEnd = $step[-1].Start + $step[-1].Length
+            $stepStart = $step[0].Start
+            # Get the content of the last step
+            $stepScript = $text.Substring($stepStart, $stepEnd - $stepStart) -replace '^\s{0,}$'
+            if ($stepScript) {
+                # and make it into a PSObject
+                $stepScript = [PSObject]::new($stepScript)
+                # with the PSTypeName 'Demo.Step'
+                $stepScript.pstypenames.add('Demo.Step')
+                # and add the .Chapter property, pointing to $this
+                $stepScript.psobject.properties.add([psnoteproperty]::new(
+                    'Chapter',$this
+                ))
+                
+                $stepScript
+            }
+            # then reset the collection of tokens in the current step.
+            $step = @()
+        }        
+    }
+
+    # Add any token we see into the current step.
+    $step += $token
+}
+
+# If there were any steps remaining
+if ($step) {    
+    $stepEnd = $step[-1].Start + $step[-1].Length
+    $stepStart = $step[0].Start
+    $stepScript = $text.Substring($stepStart, $stepEnd - $stepStart) -replace '^\s{0,}$'
+    if ($stepScript) {
+        # make them into 'Demo.Step' objects
+        $stepScript = [PSObject]::new($stepScript)
+        $stepScript.pstypenames.add('Demo.Step')
+        $stepScript.psobject.properties.add([psnoteproperty]::new(
+            'Chapter',$this
+        )) # and add the chapter.
+        $stepScript
+    }
+}
+
+                    </GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
+  <Type>
+    <Name>Demo.Step</Name>
+    <Members>
+      <ScriptMethod>
+        <Name>Invoke</Name>
+        <Script>
+                        $hiddenStep = $this.HiddenStep
+
+if (-not $hiddenStep) {
+    Invoke-Expression $this
+} elseif ($this.$($hiddenStep.StepType).Invoke) {
+    $this.$($hiddenStep.StepType).Invoke($hiddenStep.Arguments)
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Silent</Name>
+        <Script>
+                        param($silentStep)
+
+Invoke-Expression $silentStep | Out-Null
+                    </Script>
+      </ScriptMethod>
+      <ScriptProperty>
+        <Name>HiddenStep</Name>
+        <GetScriptBlock>
+                        $specialStepNameRegex = '^\s{0,}\&lt;{0,1}\#\s{0,}\.(?&lt;st&gt;[\S]+)'
+if ($this -notmatch $specialStepNameRegex) { return $null }
+[PSCustomObject]@{
+    StepType  = $matches.st
+    Arguments = $this -replace $specialStepNameRegex
+}
+                    </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
+        <Name>IsComment</Name>
+        <GetScriptBlock>
+                        $stepTokens = [Management.Automation.PSParser]::Tokenize($this, [ref]$null)
+foreach ($token in $stepTokens) {
+    if ($token.Type -notin 'Comment', 'Newline') {
+        return $false
+    }
+}
+return $true
+                    </GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
+</Types>
