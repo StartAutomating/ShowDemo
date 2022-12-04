@@ -79,4 +79,21 @@ if ($step) {
       </ScriptProperty>
     </Members>
   </Type>
+  <Type>
+    <Name>Demo.Step</Name>
+    <Members>
+      <ScriptProperty>
+        <Name>IsComment</Name>
+        <GetScriptBlock>
+                        $stepTokens = [Management.Automation.PSParser]::Tokenize($this, [ref]$null)
+foreach ($token in $stepTokens) {
+    if ($token.Type -notin 'Comment', 'Newline') {
+        return $false
+    }
+}
+return $true
+                    </GetScriptBlock>
+      </ScriptProperty>
+    </Members>
+  </Type>
 </Types>
