@@ -367,6 +367,17 @@ if ($step) {
     <Name>Demo.Step</Name>
     <Members>
       <ScriptProperty>
+        <Name>HiddenStep</Name>
+        <GetScriptBlock>
+                        $specialStepNameRegex = '^\s{0,}\&lt;{0,1}\#\s{0,}\.(?&lt;st&gt;[\S]+)'
+if ($this -notmatch $specialStepNameRegex) { return $null }
+[PSCustomObject]@{
+    StepType  = $matches.st
+    Arguments = $this -replace $specialStepNameRegex
+}
+                    </GetScriptBlock>
+      </ScriptProperty>
+      <ScriptProperty>
         <Name>IsComment</Name>
         <GetScriptBlock>
                         $stepTokens = [Management.Automation.PSParser]::Tokenize($this, [ref]$null)
