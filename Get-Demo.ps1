@@ -34,6 +34,8 @@ function Get-Demo {
             return
         }
         $filePaths =
+            @(            
+            $pwd
             if ($myModule) {
                 $moduleRelationships = 
                                        @(
@@ -79,13 +81,14 @@ function Get-Demo {
             } else {
                 $PSScriptRoot
             }
+            )
         $allDemoFiles =
             $(
             # Collect all items into an input collection
             $inputCollection =$(
             $executionContext.SessionState.InvokeCommand.GetCommands('*','Script',$true)
             ),
-               $(($PSScriptRoot |
+               $(($filePaths |
                 & { process {
                     $inObj = $_
                     if ($inObj -is [Management.Automation.CommandInfo]) {
