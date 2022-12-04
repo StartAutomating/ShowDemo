@@ -98,6 +98,8 @@
         $unresolvedOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
         if ($extension -in '.clixml', '.clix') {
             Export-Clixml -LiteralPath $unresolvedOutput -InputObject $demoContents
+            
+            Get-Item -LiteralPath $unresolvedOutput
         }
         elseif ($extension -eq '.md') {
             $demoContents | Add-Member NoteProperty Markdown $true -Force
@@ -105,7 +107,9 @@
             $demoContents | 
                 Format-Custom | 
                 Out-String -Width 1mb |
-                Set-Content $unresolvedOutput -Encoding UTF8
+                Set-Content -LiteralPath $unresolvedOutput -Encoding UTF8
+            
+            Get-Item -LiteralPath $unresolvedOutput
         }
     }
 }
