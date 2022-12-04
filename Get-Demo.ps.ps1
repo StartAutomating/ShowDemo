@@ -41,8 +41,7 @@
         }
 
         $filePaths =
-            @(            
-            $pwd
+            @(
             if ($myModule) {
                 $moduleRelationships = [ModuleRelationships()]$myModule
                 foreach ($relationship in $moduleRelationships) {
@@ -54,10 +53,21 @@
             )
 
         $allDemoFiles =
-            all scripts in $filePaths that {
+            @(all scripts in $filePaths that {
                 $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
                 $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-            } are demofiles
+            } are demofiles)
+
+        $currentDirectoryDemos = 
+            Get-ChildItem -Filter *.ps1 -Path $pwd |
+            Where-Object {
+                $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
+                $_.Name -match '\.(?>demo|walkthru)\.ps1$'
+            }
+        
+        $allDemoFiles += @(
+            all scripts in $currentDirectoryDemos are demofiles
+        )
 
         $allDemoFiles |
             Where-Object Name -like "*$demoName*" |
