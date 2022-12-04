@@ -2,6 +2,18 @@
 <!-- Generated with EZOut 1.9.7: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
 <Types>
   <Type>
+    <Name>Demo</Name>
+    <Members>
+      <ScriptMethod>
+        <Name>Start</Name>
+        <Script>
+                        $this | Add-Member NoteProperty Status Running -Force
+$this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
+                    </Script>
+      </ScriptMethod>
+    </Members>
+  </Type>
+  <Type>
     <Name>Demo.Chapter</Name>
     <Members>
       <ScriptProperty>
