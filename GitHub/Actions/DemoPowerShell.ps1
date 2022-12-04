@@ -149,7 +149,7 @@ $ActionModulePath, $ActionModule =
 
 #region Install/Import Other Modules
 @"
-::group::GitHubEvent
+::group::Installing Modules
 $(
     "Installing ugit" | Out-Host
     Install-Module -Name ugit -Scope CurrentUser -Force    
