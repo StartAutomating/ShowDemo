@@ -1,4 +1,4 @@
-function Get-Demo
+﻿function Get-Demo
 {
     <#
     .SYNOPSIS
@@ -13,7 +13,7 @@ function Get-Demo
         Get-Demo
     #>
     [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
-    param(   
+    param(
     # The name of the demo
     [Parameter(ValueFromPipelineByPropertyName,ParameterSetName='LoadedDemos')]
     [string]
@@ -31,7 +31,7 @@ function Get-Demo
     )
 
     begin {
-        $ChapterExpression = '^\s(?<cn>(?:\d+\.){1,})\s{0,}'
+        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
     }
 
     process {
@@ -40,8 +40,7 @@ function Get-Demo
             return
         }
 
-        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
-        $filePaths = 
+        $filePaths =
             if ($myModule) {
                 $moduleRelationships = [ModuleRelationships()]$myModule
                 foreach ($relationship in $moduleRelationships) {
@@ -51,7 +50,7 @@ function Get-Demo
                 $PSScriptRoot
             }
 
-        $allDemoFiles = 
+        $allDemoFiles =
             all scripts in $PSScriptRoot that {
                 $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
                 $_.Name -match '\.(?>demo|walkthru)\.ps1$'

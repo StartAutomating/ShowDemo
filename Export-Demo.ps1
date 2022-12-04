@@ -1,4 +1,4 @@
-function Export-Demo
+﻿function Export-Demo
 {
     <#
     .SYNOPSIS
@@ -31,8 +31,7 @@ function Export-Demo
 
         # In order to make Markdown demos render correctly, we need to override Write-Host
         # (in case the demo Writes to the host)
-        function Write-Host
-{
+        function Write-Host {
     <#
     .ForwardHelpTargetName Write-Host
     .ForwardHelpCategory Cmdlet
