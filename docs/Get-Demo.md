@@ -1,88 +1,65 @@
-Get-Demo
---------
-### Synopsis
-Gets Demos
 
----
-### Description
-
-Gets PowerShell Demos.
-Demos located in ShowDemo and all modules that tag ShowDemo will be automatically discovered.
-
----
-### Related Links
-* [Import-Demo](Import-Demo.md)
+###  
 
 
+    
+      ο node/16.18.1
+    
+    Use up/down arrow keys to select a version, return key to install, d to delete, q to quit     copying : node/16.18.1
+       installed : v16.18.1 (with npm 8.19.2)
+    
 
----
-### Examples
-#### EXAMPLE 1
-```PowerShell
-Get-Demo
-```
+    
+      ο node/16.18.1
+    
+    Use up/down arrow keys to select a version, return key to install, d to delete, q to quit     copying : node/16.18.1
+       installed : v16.18.1 (with npm 8.19.2)
+    
 
----
-### Parameters
-#### **DemoName**
+    
 
-The name of the demo
+    
 
+    
 
+    
 
-> **Type**: ```[String]```
+    
 
-> **Required**: false
+    
 
-> **Position**: named
+    
 
-> **PipelineInput**:true (ByPropertyName)
+    
 
+    
 
+    
 
----
-#### **DemoPath**
+    
 
-The path to the demo file.
+    
 
+    
 
+    
 
-> **Type**: ```[Object]```
+    
 
-> **Required**: true
+    
 
-> **Position**: named
+    
 
-> **PipelineInput**:true (ByPropertyName)
+    
 
+    
 
+    
 
----
-#### **DemoScript**
+    
 
-A Demo Script block.
+    
 
 
 
-> **Type**: ```[ScriptBlock]```
 
-> **Required**: true
-
-> **Position**: named
-
-> **PipelineInput**:true (ByValue)
-
-
-
----
-### Syntax
-```PowerShell
-Get-Demo [-DemoName <String>] [<CommonParameters>]
-```
-```PowerShell
-Get-Demo -DemoPath <Object> [<CommonParameters>]
-```
-```PowerShell
-Get-Demo -DemoScript <ScriptBlock> [<CommonParameters>]
-```
----
