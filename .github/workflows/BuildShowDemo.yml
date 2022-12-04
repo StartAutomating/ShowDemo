@@ -579,9 +579,22 @@ jobs:
         uses: StartAutomating/PipeScript@main
       - name: UseEZOut
         uses: StartAutomating/EZOut@master
-      - name: Use ShowDemo
-        uses: StartAutomating/ShowDemo@ShowDemo-Initial-Version
-        id: ShowDemo
+      - name: Use GitPub Action
+        uses: StartAutomating/GitPub@main
+        id: GitPub
+        with: 
+          PublishParameters: |
+            {
+                "Get-GitPubIssue": {
+                    "Repository": '${{github.repository}}'        
+                },
+                "Get-GitPubRelease": {
+                    "Repository": '${{github.repository}}'        
+                },
+                "Publish-GitPubJekyll": {
+                    "OutputPath": "docs/_posts"
+                }
+            }
       - name: UseHelpOut
         uses: StartAutomating/HelpOut@master
 on: 
