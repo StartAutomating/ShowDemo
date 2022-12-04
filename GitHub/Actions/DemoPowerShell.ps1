@@ -240,11 +240,12 @@ Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
                 }
         
         "Demo File FullName: $($demoFile.Fullname)" | Out-Host
+        Remove-Module ugit
         "Relative Path " | Out-Host
         git log ./demo.ps1 | Out-Host
         "Full Path " | Out-Host
         git log $demoFile.FullName | Out-Host
-        
+        Import-Module ugit -Global
         $lastCommitMessage =
             git log $demoFile.FullName |
                 Select-Object -ExpandProperty CommitMessage -First 1
