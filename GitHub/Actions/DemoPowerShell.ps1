@@ -239,9 +239,13 @@ Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
                     $_.FullName -replace '\.ps1$', '.md'
                 }
         
-        $lastCommitMessage = 
+        "Demo File FullName: $($demoFile.Fullname)" | Out-Host
+        git log -n 1 .\demo.ps1 | Out-Host
+        
+        $lastCommitMessage =
             git log $demoFile.FullName |
                 Select-Object -ExpandProperty CommitMessage -First 1
+        
         "LastCommitMessage for $($demoFile.Name): $lastcommitMessage" | Out-Host
         $demoFileOut |
             Add-Member NoteProperty CommitMessage $lastCommitMessage -Force -PassThru |
