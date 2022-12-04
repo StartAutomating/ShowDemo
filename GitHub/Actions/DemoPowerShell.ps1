@@ -240,7 +240,7 @@ Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
                 }
         
         $lastCommitMessage = 
-            git log $demoFile.FullName -n 1 |
+            git log -n 1 $demoFile.FullName |
                 Select-Object -ExpandProperty CommitMessage
         "LastCommitMessage for $($demoFile.Name): $lastcommitMessage" | Out-Host
         $demoFileOut |
