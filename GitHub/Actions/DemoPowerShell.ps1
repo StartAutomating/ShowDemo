@@ -227,7 +227,7 @@ if (-not $SkipShowDemoPS1) {
     }
 }
 
-git fetch --depth=100  | Out-Host
+git fetch  | Out-Host
 
 #region Export-Demo
 "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
@@ -240,14 +240,7 @@ Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
                 Export-Demo -OutputPath {
                     $_.FullName -replace '\.ps1$', '.md'
                 }
-        
-        "Demo File FullName: $($demoFile.Fullname)" | Out-Host
-        Remove-Module ugit
-        "Relative Path " | Out-Host
-        git log ./demo.ps1 | Out-Host
-        "Full Path " | Out-Host
-        git log $demoFile.FullName | Out-Host
-        Import-Module ugit -Global
+                
         $lastCommitMessage =
             git log $demoFile.FullName |
                 Select-Object -ExpandProperty CommitMessage -First 1
