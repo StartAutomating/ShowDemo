@@ -227,7 +227,7 @@ if (-not $SkipShowDemoPS1) {
     }
 }
 
-git fetch --depth=0
+git fetch --depth=100  | Out-Host
 
 #region Export-Demo
 "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
