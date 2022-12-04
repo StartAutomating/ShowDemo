@@ -581,4 +581,6 @@ jobs:
         uses: StartAutomating/EZOut@master
       - name: UseHelpOut
         uses: StartAutomating/HelpOut@master
-
+on: 
+  push: 
+  pull_request: 
