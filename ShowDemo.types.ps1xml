@@ -79,6 +79,26 @@ foreach ($_ in $stepTokens) {
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
+        <Name>Dump</Name>
+        <Script>
+                        $demoContent =
+@(foreach ($chapter in $this.Chapters) {
+    "# $($chapter.Number) $($chapter.Name)"
+    $stepIndex = 0
+    foreach ($step in $chapter.Steps) {
+        $stepIndex++
+        if ($this.CurrentChapter -eq $chapter -and $this.CurrentStep -eq $stepIndex) {
+            "    &lt;# *** You Are Here! *** #&gt;"
+        }
+        $step
+
+    }
+}) -join [Environment]::NewLine
+
+$demoContent
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
         <Name>NextChapter</Name>
         <Script>
                         $demo = $this
