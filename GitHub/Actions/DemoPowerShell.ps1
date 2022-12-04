@@ -240,7 +240,10 @@ Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
                 }
         
         "Demo File FullName: $($demoFile.Fullname)" | Out-Host
-        git log -n 1 .\demo.ps1 | Out-Host
+        "Relative Path " | Out-Host
+        git log -n 1 ./demo.ps1 | Out-Host
+        "Full Path " | Out-Host
+        git log -n 1 $demoFile.FullName | Out-Host
         
         $lastCommitMessage =
             git log $demoFile.FullName |
