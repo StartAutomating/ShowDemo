@@ -9,5 +9,6 @@ describe ShowDemo {
         $exportedDemo.Extension | Should -be '.md'
         $exportedContent = Get-Content $exportedDemo.FullName -Raw
         $exportedContent | Should -BeLike '*###*1.*'
+        $exportedContent | Should -BeLike '*Learn*PowerShell*'
     }
 }
