@@ -572,7 +572,7 @@ jobs:
     steps: 
       - name: Check out repository
         uses: actions/checkout@v2
-        fetch-depth: 100
+        with: 
       - name: Use PSSVG Action
         uses: StartAutomating/PSSVG@main
         id: PSSVG
