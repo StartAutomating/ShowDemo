@@ -180,7 +180,9 @@ filter ProcessScriptOutput {
         } elseif ($out.CommitMessage) {
             git commit -m "$($out.CommitMessage)"
         } elseif ($out.SourceFile) {
-            $lastCommitMessage = $out.SourceFile | git log -n 1
+            $lastCommitMessage = $out.SourceFile |
+                git log -n 1 |
+                Select-Object -ExpandProperty CommitMessage
             if ($lastCommitMessage) {
                 git commit -m $lastCommitMessage
             }
@@ -227,7 +229,7 @@ if (-not $SkipShowDemoPS1) {
 #region Export-Demo
 "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
 Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
-    Where-Object Name -Match '(?>demo|walkthru)\.' |
+    Where-Object Name -Match '(?<=\.|^)(?>demo|walkthru)\.' |
     Export-Demo -OutputPath {
         $_.FullName -replace '\.ps1$', '.md'
     } |
