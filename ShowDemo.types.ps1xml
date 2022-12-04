@@ -366,6 +366,18 @@ if ($step) {
   <Type>
     <Name>Demo.Step</Name>
     <Members>
+      <ScriptMethod>
+        <Name>Invoke</Name>
+        <Script>
+                        $hiddenStep = $this.HiddenStep
+
+if (-not $hiddenStep) {
+    Invoke-Expression $this
+} elseif ($this.$($hiddenStep.StepType).Invoke) {
+    $this.$($hiddenStep.StepType).Invoke($hiddenStep.Arguments)
+}
+                    </Script>
+      </ScriptMethod>
       <ScriptProperty>
         <Name>HiddenStep</Name>
         <GetScriptBlock>
