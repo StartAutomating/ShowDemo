@@ -12,7 +12,27 @@
             id = 'PSSVG'
         },
         'RunPipeScript',
-        'RunEZOut',       
+        'RunEZOut',
+        @{
+            name = 'Use GitPub Action'
+            uses = 'StartAutomating/GitPub@main'
+            id  = 'GitPub'
+            with = @{                
+                PublishParameters = @'
+{
+    "Get-GitPubIssue": {
+        "Repository": '${{github.repository}}'        
+    },
+    "Get-GitPubRelease": {
+        "Repository": '${{github.repository}}'        
+    },
+    "Publish-GitPubJekyll": {
+        "OutputPath": "docs/_posts"
+    }
+}
+'@                    
+            }
+        }
         'RunHelpOut'
     )
 }
