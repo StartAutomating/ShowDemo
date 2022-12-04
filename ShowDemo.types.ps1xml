@@ -378,6 +378,14 @@ if (-not $hiddenStep) {
 }
                     </Script>
       </ScriptMethod>
+      <ScriptMethod>
+        <Name>Silent</Name>
+        <Script>
+                        param($silentStep)
+
+Invoke-Expression $silentStep | Out-Null
+                    </Script>
+      </ScriptMethod>
       <ScriptProperty>
         <Name>HiddenStep</Name>
         <GetScriptBlock>
