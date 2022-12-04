@@ -180,6 +180,7 @@ filter ProcessScriptOutput {
         } elseif ($out.CommitMessage) {
             git commit -m "$($out.CommitMessage)"
         } elseif ($out.SourceFile) {
+            "Source File: $($out.SourceFile)" | Out-Host
             $lastCommitMessage = $out.SourceFile |
                 git log -n 1 |
                 Select-Object -ExpandProperty CommitMessage
