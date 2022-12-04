@@ -99,7 +99,8 @@
         if ($extension -in '.clixml', '.clix') {
             Export-Clixml -LiteralPath $unresolvedOutput -InputObject $demoContents
             
-            Get-Item -LiteralPath $unresolvedOutput
+            Get-Item -LiteralPath $unresolvedOutput |
+                Add-Member NoteProperty SourceFile $demoContents.DemoFile -Force -PassThru
         }
         elseif ($extension -eq '.md') {
             $demoContents | Add-Member NoteProperty Markdown $true -Force
@@ -109,7 +110,8 @@
                 Out-String -Width 1mb |
                 Set-Content -LiteralPath $unresolvedOutput -Encoding UTF8
             
-            Get-Item -LiteralPath $unresolvedOutput
+            Get-Item -LiteralPath $unresolvedOutput |
+                Add-Member NoteProperty SourceFile $demoContents.DemoFile -Force -PassThru
         }
     }
 }
