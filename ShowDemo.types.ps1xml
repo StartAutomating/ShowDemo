@@ -65,6 +65,16 @@ $demo | Add-Member NoteProperty CurrentChapter $null -Force
 $demo | Add-Member NoteProperty CurrentStep $null -Force
                     </Script>
       </ScriptMethod>
+      <ScriptProperty>
+        <Name>TotalSteps</Name>
+        <GetScriptBlock>
+                        $stepCount = 0
+foreach ($chapter in $this.Chapters) {
+    $stepCount += $chapter.Steps.Length
+}
+$stepCount
+                    </GetScriptBlock>
+      </ScriptProperty>
     </Members>
   </Type>
   <Type>
