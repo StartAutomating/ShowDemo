@@ -104,6 +104,10 @@
             $demoFile | Add-Member Interactive $true -Force
         }
 
-        $demoFile | Format-Custom
+        if ($NonInteractive) {
+            $demoFile | Format-Custom | Out-String -Width 1mb
+        } else {
+            $demoFile | Format-Custom
+        }        
     }
 }
