@@ -229,7 +229,7 @@ if (-not $SkipShowDemoPS1) {
 #region Export-Demo
 "Looking for demos in $env:GITHUB_WORKSPACE" | Out-Host
 Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -Filter *.ps1 |
-    Where-Object Name -Match '(?<=\.|^)(?>demo|walkthru)\.' |
+    Where-Object Name -Match '(?<=\.|^)(?>demo|walkthru)\.ps1$' |
     Export-Demo -OutputPath {
         $_.FullName -replace '\.ps1$', '.md'
     } |
