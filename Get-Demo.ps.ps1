@@ -41,6 +41,8 @@
         }
 
         $filePaths =
+            @(            
+            $pwd
             if ($myModule) {
                 $moduleRelationships = [ModuleRelationships()]$myModule
                 foreach ($relationship in $moduleRelationships) {
@@ -49,9 +51,10 @@
             } else {
                 $PSScriptRoot
             }
+            )
 
         $allDemoFiles =
-            all scripts in $PSScriptRoot that {
+            all scripts in $filePaths that {
                 $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
                 $_.Name -match '\.(?>demo|walkthru)\.ps1$'
             } are demofiles
