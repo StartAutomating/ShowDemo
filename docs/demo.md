@@ -1,4 +1,3 @@
-
 ### 1. Hello World in PowerShell
 
  'Hello world' is a really simple script to write in PowerShell.
@@ -181,8 +180,3 @@ Math in PowerShell is also really straightforward.
 
     
  Make Money.
-    
-
-
-
-
