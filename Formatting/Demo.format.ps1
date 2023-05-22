@@ -245,7 +245,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
 
     Write-FormatViewExpression -If {
         # If the demo is not done and it is interactive
-        -not $_.DemoFinished -and $_.Interactive
+        -not $_.DemoFinished -and $_.Interactive -and -not $_.AutoPlay
     } -ScriptBlock {        
         $demo = $_
         # Read input        
@@ -310,6 +310,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         $_.StepToRun -and 
             (-not $_.DemoFinished) -and # and the demo's not done
             (-not $_.StepToRun.IsComment) -and # and the step is not a comment
+            (-not $_.Autoplay) -and # and we're not autoplaying
             $_.Interactive # and we're running interactively
     } -ScriptBlock {
         $demo = $_
@@ -327,6 +328,12 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 . $output | Out-Host
             }
         }
+    }
+
+    Write-FormatViewExpression -If {
+        $_.Autoplay
+    } -ScriptBlock {
+        Start-Sleep -Milliseconds $_.PauseBetweenStep.TotalMilliseconds
     }
 
     
