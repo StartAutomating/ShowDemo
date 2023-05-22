@@ -61,4 +61,3 @@ It helped showcase just how cool PowerShell could be, and gave every scripter a 
 Start-Demo was written all the way back in PowerShell v1; before the parser API, before markdown, and well before colorized output in Windows Terminal.
 
 ShowDemo is designed to update and replace the old Start-Demo and provide a foundation to give it even more modern capabilities.
-
