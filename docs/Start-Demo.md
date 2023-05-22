@@ -157,6 +157,38 @@ Otherwise, this will be the timespan to wait between words / letters being displ
 
 
 
+#### **PauseBetweenStep**
+
+The amount of time to wait between each step.
+If provided, implies -AutoPlay.
+
+
+
+
+
+
+|Type        |Required|Position|PipelineInput|Aliases          |
+|------------|--------|--------|-------------|-----------------|
+|`[TimeSpan]`|false   |named   |false        |PauseBetweenSteps|
+
+
+
+#### **AutoPlay**
+
+If set, will automatically play demos.
+Use -PauseBetweenStep to specify how long to wait between each step.
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput|
+|----------|--------|--------|-------------|
+|`[Switch]`|false   |named   |false        |
+
+
+
 #### **NonInteractive**
 
 If set, will make the demo noniteractive.
@@ -179,11 +211,11 @@ If set, will make the demo noniteractive.
 
 ### Syntax
 ```PowerShell
-Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-NonInteractive] [<CommonParameters>]
+Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-NonInteractive] [<CommonParameters>]
+Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-NonInteractive] [<CommonParameters>]
+Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [<CommonParameters>]
 ```
