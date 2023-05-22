@@ -1,5 +1,6 @@
 $text = $this.Text
 $step = @()
+$ThisChapterSteps = @()
 
 # We want every step to be able to run independently.
 # This would be untrue if the code is unbalanced when a chapter would start
@@ -17,11 +18,15 @@ for ($tokenNumber =0 ; $tokenNumber -lt $this.Tokens.Length; $tokenNumber++) {
     {
         $groupDepth-- # decrement depth.
     }
-    # If there was no depth
-    # and the token was a comment starting in the first column.
+    
+    # and 
+    
     elseif (                
-        (-not $groupDepth) -and            
-        $token.StartColumn -le 1
+        (-not $groupDepth) -and  # If there was no depth and            
+        $token.StartColumn -le 1 -and # the token was a comment starting in the first column
+        $token[-1].Type -ne 'Keyword' -and # and it wasn't preceeded by a keyword
+        $token[0].Type -ne 'Keyword' -and # and it wasn't a keyword
+        $token[0].Type -ne 'Newline' # and it wasn't a newline
     ) {
         # Then it's the start of a new step
         if ($step) {
@@ -39,7 +44,7 @@ for ($tokenNumber =0 ; $tokenNumber -lt $this.Tokens.Length; $tokenNumber++) {
                     'Chapter',$this
                 ))
                 
-                $stepScript
+                $ThisChapterSteps += $stepScript
             }
             # then reset the collection of tokens in the current step.
             $step = @()
@@ -62,6 +67,9 @@ if ($step) {
         $stepScript.psobject.properties.add([psnoteproperty]::new(
             'Chapter',$this
         )) # and add the chapter.
-        $stepScript
+        $ThisChapterSteps += $stepScript
     }
 }
+
+# Force steps to be returned as a list.
+,$ThisChapterSteps
