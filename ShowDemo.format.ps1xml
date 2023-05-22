@@ -298,7 +298,7 @@
                 <ItemSelectionCondition>
                   <ScriptBlock>
         # If the demo is not done and it is interactive
-        -not $_.DemoFinished -and $_.Interactive
+        -not $_.DemoFinished -and $_.Interactive -and -not $_.AutoPlay
     </ScriptBlock>
                 </ItemSelectionCondition>
                 <ScriptBlock>        
@@ -371,6 +371,7 @@
         $_.StepToRun -and 
             (-not $_.DemoFinished) -and # and the demo's not done
             (-not $_.StepToRun.IsComment) -and # and the step is not a comment
+            (-not $_.Autoplay) -and # and we're not autoplaying
             $_.Interactive # and we're running interactively
     </ScriptBlock>
                 </ItemSelectionCondition>
@@ -390,6 +391,16 @@
                 . output | Out-Host
             }
         }
+    </ScriptBlock>
+              </ExpressionBinding>
+              <ExpressionBinding>
+                <ItemSelectionCondition>
+                  <ScriptBlock>
+        $_.Autoplay
+    </ScriptBlock>
+                </ItemSelectionCondition>
+                <ScriptBlock>
+        Start-Sleep -Milliseconds $_.PauseBetweenStep.TotalMilliseconds
     </ScriptBlock>
               </ExpressionBinding>
               <ExpressionBinding>
