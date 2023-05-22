@@ -595,6 +595,10 @@ jobs:
                     "OutputPath": "docs/_posts"
                 }
             }
+      - name: Run ShowDemo (on branch)
+        if: ${{github.ref_name != 'main'}}
+        uses: ./
+        id: ShowDemo
       - name: UseHelpOut
         uses: StartAutomating/HelpOut@master
 on: 
