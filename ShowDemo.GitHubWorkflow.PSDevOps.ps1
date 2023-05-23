@@ -11,5 +11,11 @@ New-GitHubWorkflow -Job PowerShellStaticAnalysis, TestPowerShellOnLinux, TagRele
 .\.github\workflows\BuildShowDemo.yml
 '@ -Name "Build, Test, and Release ShowDemo" -On Push, PullRequest
 
+Import-BuildStep -ModuleName GitPub
+
+New-GitHubWorkflow -On Demand -Job RunGitPub -Name GitPub -OutputPath @'
+.\.github\workflows\GitPub.yml
+'@
+
 Pop-Location
 
