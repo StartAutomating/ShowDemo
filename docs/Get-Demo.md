@@ -1,87 +1,106 @@
-###  
+Get-Demo
+--------
 
 
+
+
+### Synopsis
+Gets Demos
+
+
+
+---
+
+
+### Description
+
+Gets PowerShell Demos.
+Demos located in ShowDemo and all modules that tag ShowDemo will be automatically discovered.
+
+
+
+---
+
+
+### Related Links
+* [Import-Demo](Import-Demo.md)
+
+
+
+
+
+---
+
+
+### Examples
+#### EXAMPLE 1
 ```PowerShell
-function Get-Demo
-{
-    <#
-    .SYNOPSIS
-        Gets Demos
-    .DESCRIPTION
-        Gets PowerShell Demos.
-
-        Demos located in ShowDemo and all modules that tag ShowDemo will be automatically discovered.
-    .LINK
-        Import-Demo
-    .EXAMPLE
-        Get-Demo
-    #>
-    [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
-    param(
-    # The name of the demo
-    [Parameter(ValueFromPipelineByPropertyName,ParameterSetName='LoadedDemos')]
-    [string]
-    $DemoName,
+Get-Demo
 ```
 
+
+
+---
+
+
+### Parameters
+#### **DemoName**
+
+The name of the demo
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput        |
+|----------|--------|--------|---------------------|
+|`[String]`|false   |named   |true (ByPropertyName)|
+
+
+
+#### **DemoPath**
+
+The path to the demo file.
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput        |Aliases                                  |
+|----------|--------|--------|---------------------|-----------------------------------------|
+|`[Object]`|true    |named   |true (ByPropertyName)|FullName<br/>DemoFile<br/>File<br/>Source|
+
+
+
+#### **DemoScript**
+
+A Demo Script block.
+
+
+
+
+
+
+|Type           |Required|Position|PipelineInput |
+|---------------|--------|--------|--------------|
+|`[ScriptBlock]`|true    |named   |true (ByValue)|
+
+
+
+
+
+---
+
+
+### Syntax
 ```PowerShell
-# The path to the demo file.
-    [Parameter(Mandatory,ValueFromPipelineByPropertyName,ParameterSetName='DemoFile')]
-    [Alias('FullName', 'DemoFile', 'File', 'Source')]
-    $DemoPath,
+Get-Demo [-DemoName <String>] [<CommonParameters>]
 ```
-
 ```PowerShell
-# A Demo Script block.
-    [Parameter(Mandatory,ValueFromPipeline,ParameterSetName='DemoScript')]
-    [scriptblock]
-    $DemoScript
-    )
+Get-Demo -DemoPath <Object> [<CommonParameters>]
 ```
-
 ```PowerShell
-begin {
-        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
-    }
-```
-
-```PowerShell
-process {
-        if ($PSCmdlet.ParameterSetName -in 'DemoFile', 'DemoScript') {
-            Import-Demo @psboundParameters
-            return
-        }
-```
-
-```PowerShell
-$filePaths =
-            @(            
-            $pwd
-            if ($myModule) {
-                $moduleRelationships = [ModuleRelationships()]$myModule
-                foreach ($relationship in $moduleRelationships) {
-                    $relationship.RelatedModule | Split-Path
-                }
-            } else {
-                $PSScriptRoot
-            }
-            )
-```
-
-    
-
-```PowerShell
-$allDemoFiles =
-            all scripts in $filePaths that {
-                $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
-                $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-            } are demofiles
-```
-
-```PowerShell
-$allDemoFiles |
-            Where-Object Name -like "*$demoName*" |
-            Import-Demo
-    }
-}
+Get-Demo -DemoScript <ScriptBlock> [<CommonParameters>]
 ```
