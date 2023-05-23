@@ -103,6 +103,9 @@
                 Add-Member NoteProperty SourceFile $demoContents.DemoFile -Force -PassThru
         }
         elseif ($extension -eq '.md') {
+            if ([Globalization.CultureInfo]::CurrentCulture.LCID -eq 127) {
+                [Globalization.CultureInfo]::CurrentCulture = 'en-us'
+            }
             $demoContents | Add-Member NoteProperty Markdown $true -Force
             $demoContents | Add-Member NoteProperty Interactive $false -Force
             $demoContents | 

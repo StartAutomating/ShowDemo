@@ -13,7 +13,7 @@ New-GitHubWorkflow -Job PowerShellStaticAnalysis, TestPowerShellOnLinux, TagRele
 
 Import-BuildStep -ModuleName GitPub
 
-New-GitHubWorkflow -On Issue, Demand -Job RunGitPub -Name GitPub -OutputPath @'
+New-GitHubWorkflow -On Demand -Job RunGitPub -Name GitPub -OutputPath @'
 .\.github\workflows\GitPub.yml
 '@
 

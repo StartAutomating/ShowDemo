@@ -47,6 +47,17 @@
     [timespan]
     $TypeSpeed,
 
+    # The amount of time to wait between each step.
+    # If provided, implies -AutoPlay.
+    [Alias('PauseBetweenSteps')]
+    [timespan]
+    $PauseBetweenStep,
+
+    # If set, will automatically play demos.
+    # Use -PauseBetweenStep to specify how long to wait between each step.
+    [switch]
+    $AutoPlay,
+
     # If set, will make the demo noniteractive.
     [switch]
     $NonInteractive
@@ -94,6 +105,8 @@
             $TypeSpeed = [timespan]::FromMilliseconds(30)
         }
         $demoFile | Add-Member TypeSpeed $TypeSpeed -Force
+
+        
         if ($NonInteractive -or
             ($Host.Name -eq 'Default Host') -or
             $env:BUILD_ID -or
@@ -102,6 +115,14 @@
             $demoFile | Add-Member Interactive $false -Force
         } else {
             $demoFile | Add-Member Interactive $true -Force
+        }
+
+        if ($AutoPlay -or $PauseBetweenStep.TotalMilliseconds) {
+            if (-not $PauseBetweenStep.TotalMilliseconds) {
+                $PauseBetweenStep = [timespan]::FromMilliseconds(500)
+            }
+            $demoFile | Add-Member Autoplay $true -Force
+            $demoFile | Add-Member PauseBetweenStep $PauseBetweenStep -Force
         }
 
         if ($NonInteractive) {
