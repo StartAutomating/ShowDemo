@@ -1,3 +1,12 @@
+## ShowDemo 0.1.2:
+
+* Get-Demo - Skipping $pwd if in $filePaths (Fixes #43)
+* Show-Demo - Adding -Record (Fixes #42)
+* Import-Demo - Including .DemoScript (Fixes #44)
+* Adding Demo.ToMarkdown (Fixes #45)
+
+---
+
 ## ShowDemo 0.1.1
 
 * Show-Demo now supports -AutoPlay/-PauseBetweenStep (#39)

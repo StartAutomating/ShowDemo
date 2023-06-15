@@ -58,16 +58,19 @@
                 $_.Name -match '\.(?>demo|walkthru)\.ps1$'
             } are demofiles)
 
-        $currentDirectoryDemos = 
-            Get-ChildItem -Filter *.ps1 -Path $pwd |
-            Where-Object {
-                $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
-                $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-            }
+        if ($filePaths -ne $pwd) {
+            $currentDirectoryDemos = 
+                Get-ChildItem -Filter *.ps1 -Path $pwd |
+                Where-Object {
+                    $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
+                    $_.Name -match '\.(?>demo|walkthru)\.ps1$'
+                }
         
-        $allDemoFiles += @(
-            all scripts in $currentDirectoryDemos are demofiles
-        )
+            $allDemoFiles += @(
+                all scripts in $currentDirectoryDemos are demofiles
+            )
+        }
+        
 
         $allDemoFiles |
             Where-Object Name -like "*$demoName*" |
