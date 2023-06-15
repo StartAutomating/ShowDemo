@@ -164,67 +164,70 @@ function Get-Demo {
                           
               }   
               ))
-        $currentDirectoryDemos = 
-            Get-ChildItem -Filter *.ps1 -Path $pwd |
-            Where-Object {
-                $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
-                $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-            }
+        if ($filePaths -ne $pwd) {
+            $currentDirectoryDemos = 
+                Get-ChildItem -Filter *.ps1 -Path $pwd |
+                Where-Object {
+                    $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
+                    $_.Name -match '\.(?>demo|walkthru)\.ps1$'
+                }
         
-        $allDemoFiles += @(
-            $(
-            # Collect all items into an input collection
-            $inputCollection =$(
-            $executionContext.SessionState.InvokeCommand.GetCommands('*','Script',$true)
-            ),
-               $(($currentDirectoryDemos |
-                & { process {
-                    $inObj = $_
-                    if ($inObj -is [Management.Automation.CommandInfo]) {
-                        $inObj
-                    }
-                    elseif ($inObj -is [IO.FileInfo] -and $inObj.Extension -eq '.ps1') {
-                        $ExecutionContext.SessionState.InvokeCommand.GetCommand($inObj.Fullname, 'ExternalScript')
-                    }
-                    elseif ($inObj -is [string] -or $inObj -is [Management.Automation.PathInfo]) {
-                        $resolvedPath = $ExecutionContext.SessionState.Path.GetResolvedPSPathFromPSPath($inObj)
-                        if ($resolvedPath) {
-                            $pathItem = Get-item -LiteralPath $resolvedPath
-                            if ($pathItem -is [IO.FileInfo] -and $pathItem.Extension -eq '.ps1') {
-                                $ExecutionContext.SessionState.InvokeCommand.GetCommand($pathItem.FullName, 'ExternalScript')
-                            } else {                    
-                                foreach ($pathItem in @(Get-ChildItem -LiteralPath $pathItem -File -Recurse)) {
-                                    if ($pathItem.Extension -eq '.ps1') {
-                                        $ExecutionContext.SessionState.InvokeCommand.GetCommand($pathItem.FullName, 'ExternalScript')
+            $allDemoFiles += @(
+                $(
+                # Collect all items into an input collection
+                $inputCollection =$(
+                $executionContext.SessionState.InvokeCommand.GetCommands('*','Script',$true)
+                ),
+                   $(($currentDirectoryDemos |
+                    & { process {
+                        $inObj = $_
+                        if ($inObj -is [Management.Automation.CommandInfo]) {
+                            $inObj
+                        }
+                        elseif ($inObj -is [IO.FileInfo] -and $inObj.Extension -eq '.ps1') {
+                            $ExecutionContext.SessionState.InvokeCommand.GetCommand($inObj.Fullname, 'ExternalScript')
+                        }
+                        elseif ($inObj -is [string] -or $inObj -is [Management.Automation.PathInfo]) {
+                            $resolvedPath = $ExecutionContext.SessionState.Path.GetResolvedPSPathFromPSPath($inObj)
+                            if ($resolvedPath) {
+                                $pathItem = Get-item -LiteralPath $resolvedPath
+                                if ($pathItem -is [IO.FileInfo] -and $pathItem.Extension -eq '.ps1') {
+                                    $ExecutionContext.SessionState.InvokeCommand.GetCommand($pathItem.FullName, 'ExternalScript')
+                                } else {                    
+                                    foreach ($pathItem in @(Get-ChildItem -LiteralPath $pathItem -File -Recurse)) {
+                                        if ($pathItem.Extension -eq '.ps1') {
+                                            $ExecutionContext.SessionState.InvokeCommand.GetCommand($pathItem.FullName, 'ExternalScript')
+                                        }
                                     }
                                 }
-                            }
-                        }            
+                            }            
+                        }
+                    } }
+                ))
+                # 'unroll' the collection by iterating over it once.
+                $filteredCollection = $inputCollection =
+                    @(foreach ($in in $inputCollection) {
+                        $in
+                    })
+                # Walk over each item in the filtered collection
+                foreach ($item in $filteredCollection) {
+                    # we set $this, $psItem, and $_ for ease-of-use.
+                    $this = $_ = $psItem = $item
+                if ($item.value -and $item.value.pstypenames.insert) {
+                    if ($item.value.pstypenames -notcontains 'demofiles') {
+                        $item.value.pstypenames.insert(0, 'demofiles')
                     }
-                } }
-            ))
-            # 'unroll' the collection by iterating over it once.
-            $filteredCollection = $inputCollection =
-                @(foreach ($in in $inputCollection) {
-                    $in
-                })
-            # Walk over each item in the filtered collection
-            foreach ($item in $filteredCollection) {
-                # we set $this, $psItem, and $_ for ease-of-use.
-                $this = $_ = $psItem = $item
-            if ($item.value -and $item.value.pstypenames.insert) {
-                if ($item.value.pstypenames -notcontains 'demofiles') {
-                    $item.value.pstypenames.insert(0, 'demofiles')
                 }
-            }
-            elseif ($item.pstypenames.insert -and $item.pstypenames -notcontains 'demofiles') {
-                $item.pstypenames.insert(0, 'demofiles')
-            }
-            $item
-                        
-            }   
+                elseif ($item.pstypenames.insert -and $item.pstypenames -notcontains 'demofiles') {
+                    $item.pstypenames.insert(0, 'demofiles')
+                }
+                $item
+                            
+                }   
+                )
             )
-        )
+        }
+        
         $allDemoFiles |
             Where-Object Name -like "*$demoName*" |
             Import-Demo
