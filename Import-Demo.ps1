@@ -156,6 +156,7 @@
             PSTypeName = 'Demo'
             Name       = $demoName
             DemoFile   = $fileInfo.FullName
+            DemoScript = $DemoScript
         }
 
         $demoFile.Chapters = @(
