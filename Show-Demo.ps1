@@ -60,7 +60,12 @@
 
     # If set, will make the demo noniteractive.
     [switch]
-    $NonInteractive
+    $NonInteractive,
+
+    # If set, will attempt to record the demo.
+    # This presumes that [obs-powershell](https://github.com/StartAutomating/obs-powershell) is installed.
+    [switch]
+    $Record
     )
 
     process {
@@ -95,6 +100,10 @@
         }
         if ($step) {
             $demoFile | Add-Member CurrentStep $step -Force
+        }
+
+        if ($Record) {            
+            $demoFile | Add-Member RecordDemo $true -Force
         }
 
         $demoFile | Add-Member TypeStyle $TypeStyle -Force

@@ -12,6 +12,16 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         -not $_.DemoStarted
     } -ScriptBlock {
         $demo = $_
+    
+        if ($demo.RecordDemo) {
+            $startRecordingCommand = $ExecutionContext.SessionState.InvokeCommand.GetCommand('Start-Recording','Function,Alias')
+            if ($startRecordingCommand) {                
+                $null = Start-Recording
+            } else {
+                Write-Warning "Start-Recording was not found.  Have you installed/imported obs-powershell?"                
+            }
+        }
+    
         # Start the demo.
         $demo.Start()
         
@@ -361,6 +371,20 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         $duration = $_.DemoFinished - $_.DemoStarted
         # change the status
         $demo.SetStatus('Finished')
+        if ($demo.RecordDemo) {
+            $stopRecording = $ExecutionContext.SessionState.InvokeCommand.GetCommand('Stop-Recording', 'Alias,Function')
+            if ($stopRecording) {
+                $recordingOutputFile = Stop-Recording
+                $newRecordingName    = "$($demo.Name).$($demo.DemoStarted.ToString('s') -replace ':', '-')$($recordingOutputFile.Extension)"
+                if ($recordingOutputFile) {
+                    try {                        
+                        Copy-Item $recordingOutputFile.FullName -Destination ($recordingOutputFile.FullName | Split-Path | Join-Path -ChildPath $newRecordingName )
+                    } catch {
+                        Write-Warning "Could not copy $($recordingOutputFile) to $($demo.Name): $($_ | Out-String)"
+                    }
+                }
+            }
+        }
         # and prepare a message.
         $finishedMessage = 
             Format-RichText -InputObject (
