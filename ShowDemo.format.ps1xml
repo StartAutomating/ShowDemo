@@ -183,6 +183,21 @@
               <ExpressionBinding>
                 <ItemSelectionCondition>
                   <ScriptBlock>
+        $_.StepToRun -and 
+        $_.ShowPrompt -and
+        (
+            (-not $_.DemoFinished) -and # and the demo's not done            
+            $_.Interactive # and we're running interactively
+        ) 
+    </ScriptBlock>
+                </ItemSelectionCondition>
+                <ScriptBlock>
+        prompt | Out-Host
+    </ScriptBlock>
+              </ExpressionBinding>
+              <ExpressionBinding>
+                <ItemSelectionCondition>
+                  <ScriptBlock>
         # If we still have a current step        
         $_.CurrentStep
     </ScriptBlock>
@@ -329,8 +344,7 @@
             elseif ($output -is [scriptblock]) {
                 . output | Out-Host # (which we will run).
             }
-        }
-    
+        }    
     </ScriptBlock>
               </ExpressionBinding>
               <ExpressionBinding>
