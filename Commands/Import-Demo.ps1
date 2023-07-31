@@ -152,20 +152,23 @@
             }
         }
 
-        $demoFile = [Ordered]@{
+        $demoFile = [PSCustomObject][Ordered]@{
             PSTypeName = 'Demo'
             Name       = $demoName
             DemoFile   = $fileInfo.FullName
             DemoScript = $DemoScript
         }
 
-        $demoFile.Chapters = @(
-            foreach ($chapter in $chapters) {
-                [PSCustomObject]([Ordered]@{PSTypeName='Demo.Chapter'} + $chapter)
-            }
-        )
 
-        [PSCustomObject]$demoFile
+
+        $demoFile | 
+            Add-Member NoteProperty Chapters @(
+                foreach ($chapter in $chapters) {
+                    [PSCustomObject]([Ordered]@{PSTypeName='Demo.Chapter';Demo=$demoFile} + $chapter)
+                }
+            ) -Force -PassThru
+
+        # $demoFile
     }
 }
 
