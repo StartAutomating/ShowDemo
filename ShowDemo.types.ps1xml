@@ -405,6 +405,22 @@ if ($step) {
     <Name>Demo.Step</Name>
     <Members>
       <ScriptMethod>
+        <Name>HidePrompt</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Hides the prompt
+.DESCRIPTION
+    Hides the prompt within a demo.
+.EXAMPLE
+    #.HidePrompt
+#&gt;
+param($step)
+
+$this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $false
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
         <Name>Invoke</Name>
         <Script>
                         $hiddenStep = $this.HiddenStep
@@ -414,6 +430,28 @@ if (-not $hiddenStep) {
 } elseif ($this.$($hiddenStep.StepType).Invoke) {
     $this.$($hiddenStep.StepType).Invoke($hiddenStep.Arguments)
 }
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>ShowPrompt</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Shows the prompt
+.DESCRIPTION
+    Show the prompt within a demo.
+.EXAMPLE
+    #.ShowPrompt
+#&gt;
+param(
+# Any additional parameters for the step.
+# This is ignored when showing prompts.
+$step
+)
+
+param($step)
+
+$this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $true
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
