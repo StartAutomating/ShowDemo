@@ -134,6 +134,17 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
     }
 
     Write-FormatViewExpression -If {
+        $_.StepToRun -and 
+        $_.ShowPrompt -and
+        (
+            (-not $_.DemoFinished) -and # and the demo's not done            
+            $_.Interactive # and we're running interactively
+        ) 
+    } -ScriptBlock {
+        prompt | Out-Host
+    }
+
+    Write-FormatViewExpression -If {
         # If we still have a current step        
         $_.CurrentStep
     } -ScriptBlock {
@@ -274,8 +285,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             elseif ($output -is [scriptblock]) {
                 . $output | Out-Host # (which we will run).
             }
-        }
-    
+        }    
     }
 
     Write-FormatViewExpression -If {
