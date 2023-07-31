@@ -12,6 +12,4 @@ param(
 $step
 )
 
-param($step)
-
 $this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $true
