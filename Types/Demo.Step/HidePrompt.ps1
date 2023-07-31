@@ -1,0 +1,11 @@
+<#
+.SYNOPSIS
+    Hides the prompt
+.DESCRIPTION
+    Hides the prompt within a demo.
+.EXAMPLE
+    #.HidePrompt
+#>
+param($step)
+
+$this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $false
