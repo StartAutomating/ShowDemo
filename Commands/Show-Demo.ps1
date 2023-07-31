@@ -62,6 +62,11 @@
     [switch]
     $NonInteractive,
 
+    # If set, will show the prompt between each step.
+    # This can also be enabled or disabled within a demo, with .ShowPrompt or .HidePrompt
+    [switch]
+    $ShowPrompt,
+
     # If set, will attempt to record the demo.
     # This presumes that [obs-powershell](https://github.com/StartAutomating/obs-powershell) is installed.
     [switch]
@@ -104,6 +109,10 @@
 
         if ($Record) {            
             $demoFile | Add-Member RecordDemo $true -Force
+        }
+
+        if ($ShowPrompt) {
+            $demoFile | Add-Member ShowPrompt $true -Force
         }
 
         $demoFile | Add-Member TypeStyle $TypeStyle -Force
