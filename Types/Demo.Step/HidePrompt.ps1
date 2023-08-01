@@ -6,6 +6,10 @@
 .EXAMPLE
     #.HidePrompt
 #>
-param($step)
+param(
+# Any additional parameters for the step.
+# This is ignored when hiding prompts.
+$step
+)
 
 $this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $false
