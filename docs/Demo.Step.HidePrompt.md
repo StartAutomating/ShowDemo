@@ -35,6 +35,11 @@ Hides the prompt within a demo.
 ### Parameters
 #### **step**
 
+Any additional parameters for the step.
+This is ignored when hiding prompts.
+
+
+
 
 
 
