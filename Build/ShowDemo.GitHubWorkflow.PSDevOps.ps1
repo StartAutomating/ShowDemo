@@ -5,7 +5,7 @@
 
 Import-BuildStep -Module ShowDemo
 
-Push-Location $PSScriptRoot
+Push-Location ($PSScriptRoot | Split-Path)
 
 New-GitHubWorkflow -Job PowerShellStaticAnalysis, TestPowerShellOnLinux, TagReleaseAndPublish, BuildShowDemo -OutputPath @'
 .\.github\workflows\BuildShowDemo.yml

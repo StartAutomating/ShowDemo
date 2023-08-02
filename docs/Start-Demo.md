@@ -204,6 +204,22 @@ If set, will make the demo noniteractive.
 
 
 
+#### **ShowPrompt**
+
+If set, will show the prompt between each step.
+This can also be enabled or disabled within a demo, with .ShowPrompt or .HidePrompt
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput|
+|----------|--------|--------|-------------|
+|`[Switch]`|false   |named   |false        |
+
+
+
 #### **Record**
 
 If set, will attempt to record the demo.
@@ -227,11 +243,11 @@ This presumes that [obs-powershell](https://github.com/StartAutomating/obs-power
 
 ### Syntax
 ```PowerShell
-Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-Record] [<CommonParameters>]
+Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-Record] [<CommonParameters>]
+Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-Record] [<CommonParameters>]
+Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
 ```

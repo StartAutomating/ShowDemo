@@ -139,11 +139,16 @@
             }
         }
 
+        # If we have a named chapter
         if ($currentChapter) {
+            # add any remaining tokens to it.
             $currentChapter.Tokens = $chapterTokens
             $chapterTokens = @()
+            # and add the chapter.
             $chapters += $currentChapter
         } elseif ($chapterTokens) {
+            # Otherwise, if we have chapter tokens by no named chapter
+            # create an empty chapter and add the steps to it.
             $chapters += [Ordered]@{
                 Number = ''
                 Name = ''
@@ -152,20 +157,22 @@
             }
         }
 
-        $demoFile = [Ordered]@{
+        # Create the demo object.
+        $demoFile = [PSCustomObject][Ordered]@{
             PSTypeName = 'Demo'
             Name       = $demoName
             DemoFile   = $fileInfo.FullName
             DemoScript = $DemoScript
         }
 
-        $demoFile.Chapters = @(
-            foreach ($chapter in $chapters) {
-                [PSCustomObject]([Ordered]@{PSTypeName='Demo.Chapter'} + $chapter)
-            }
-        )
-
-        [PSCustomObject]$demoFile
+        # And add each chapter to it
+        $demoFile | 
+            Add-Member NoteProperty Chapters @(
+                foreach ($chapter in $chapters) {
+                    # linking back to the demo as we go (#57).
+                    [PSCustomObject]([Ordered]@{PSTypeName='Demo.Chapter';Demo=$demoFile} + $chapter)
+                }
+            ) -Force -PassThru # We -PassThru the modified object to return it.
     }
 }
 

@@ -1,3 +1,14 @@
+## ShowDemo 0.1.3:
+
+* Adding support for prompts in demos
+  * Demo.Step - Adding .ShowPrompt()/HidePrompt() (#54/#55)
+  * Demo Formatting - Supporting ShowPrompt (#56)
+  * Show-Demo - Adding -ShowPrompt (#53)
+  * Import-Demo - Linking Chapters (#57)
+* Partitioning repository (#48, #49, #50)
+
+---
+
 ## ShowDemo 0.1.2:
 
 * Get-Demo - Skipping $pwd if in $filePaths (Fixes #43)

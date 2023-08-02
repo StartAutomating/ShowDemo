@@ -4,7 +4,7 @@
     Copyright        = '2022-2023 Start-Automating'
     Description      = 'A simple tool to showcase your scripts.'
     Guid             = 'c4516317-f99e-44cf-b138-d8c4d1eadf66'
-    ModuleVersion    = '0.1.2'
+    ModuleVersion    = '0.1.3'
     RootModule       = 'ShowDemo.psm1'
     FormatsToProcess = 'ShowDemo.format.ps1xml'
     TypesToProcess   = 'ShowDemo.types.ps1xml'        
@@ -14,6 +14,17 @@
             ProjectURI   = 'https://github.com/StartAutomating/ShowDemo'
             LicenseURI   = 'https://github.com/StartAutomating/ShowDemo/blob/main/LICENSE'
             ReleaseNotes = @'
+## ShowDemo 0.1.3:
+
+* Adding support for prompts in demos
+  * Demo.Step - Adding .ShowPrompt()/HidePrompt() (#54/#55)
+  * Demo Formatting - Supporting ShowPrompt (#56)
+  * Show-Demo - Adding -ShowPrompt (#53)
+  * Import-Demo - Linking Chapters (#57)
+* Partitioning repository (#48, #49, #50)
+
+---
+
 ## ShowDemo 0.1.2:
 
 * Get-Demo - Skipping $pwd if in $filePaths (Fixes #43)
