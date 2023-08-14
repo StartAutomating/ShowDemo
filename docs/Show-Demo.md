@@ -236,6 +236,36 @@ This presumes that [obs-powershell](https://github.com/StartAutomating/obs-power
 
 
 
+#### **StartMessage**
+
+If provided, will set the message displayed at demo start.
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput|
+|----------|--------|--------|-------------|
+|`[String]`|false   |named   |false        |
+
+
+
+#### **EndMessage**
+
+If provided, will set the message displayed at demo start.
+
+
+
+
+
+
+|Type      |Required|Position|PipelineInput|
+|----------|--------|--------|-------------|
+|`[String]`|false   |named   |false        |
+
+
+
 
 
 ---
@@ -243,11 +273,11 @@ This presumes that [obs-powershell](https://github.com/StartAutomating/obs-power
 
 ### Syntax
 ```PowerShell
-Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
+Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
+Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
 ```
 ```PowerShell
-Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [<CommonParameters>]
+Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
 ```
