@@ -53,6 +53,7 @@ Initial Release of Show-Demo.
 * ShowDemo GitHub Action
 
 '@
+            Recommendation = 'obs-powershell', 'Posh'
         }
   }
 }
