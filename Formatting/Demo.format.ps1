@@ -298,13 +298,13 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         if ($demo.Interactive) {            
             [Console]::WriteLine()
             # If we're running interactively, pipe it out.
-            $ExecutionContext.SessionState.InvokeCommand.InvokeScript($demo.StepToRun,$true, 'All', $null,$null) |
+            Invoke-Expression -Command $demo.StepToRun *>&1 |
                 Out-Host
         } 
         else{
             # Otherwise, pipe it to Out-String
             $stepOutput = 
-                $ExecutionContext.SessionState.InvokeCommand.InvokeScript($demo.StepToRun,$true, 'All', $null,$null) |
+                Invoke-Expression -Command $demo.StepToRun *>&1 |
                     Out-String -Width 1kb
             
             # If we're outputting markdown
