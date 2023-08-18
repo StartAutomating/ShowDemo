@@ -26,24 +26,26 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         $demo.Start()
         
         # Then, create a message indicating we've started.
-        $demoStartMessage = 
-            Format-RichText -ForegroundColor Warning -InputObject (
-                "Demo Started" +
-                    ([Environment]::NewLine * 2)
-            ) -Italic
-        
-        # If the demo is being run interactively,
-        if ($demo.Interactive) {
-            # write that message to the host.
-            $demoStartMessage | Out-Host
-            ""
-        }
-        # Otherwise, as long as we are not outputting markdown
-        elseif (-not $demo.Markdown) {
-            # output the demo started message.
-            ($demoStartMessage -join '') + [Environment]::NewLine
-        } else {
-            ''
+        if ($demo.StartMessage) {
+            $demoStartMessage = 
+                Format-RichText -ForegroundColor Warning -InputObject (
+                    $demo.StartMessage +
+                        ([Environment]::NewLine * 2)
+                ) -Italic
+            
+            # If the demo is being run interactively,
+            if ($demo.Interactive) {
+                # write that message to the host.
+                $demoStartMessage | Out-Host
+                ""
+            }
+            # Otherwise, as long as we are not outputting markdown
+            elseif (-not $demo.Markdown) {
+                # output the demo started message.
+                ($demoStartMessage -join '') + [Environment]::NewLine
+            } else {
+                ''
+            }
         }
     }
 
@@ -294,13 +296,16 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
         $demo = $_
         # Run it.
         if ($demo.Interactive) {            
-            [Console]::WriteLine()            
+            [Console]::WriteLine()
             # If we're running interactively, pipe it out.
-            Invoke-Expression $demo.StepToRun | Out-Host
+            Invoke-Expression -Command $demo.StepToRun *>&1 |
+                Out-Host
         } 
         else{
             # Otherwise, pipe it to Out-String
-            $stepOutput = Invoke-Expression $demo.StepToRun | Out-String -Width 1kb
+            $stepOutput = 
+                Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String -Width 1kb
             
             # If we're outputting markdown
             if ($demo.Markdown) {               
@@ -396,22 +401,25 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             }
         }
         # and prepare a message.
-        $finishedMessage = 
-            Format-RichText -InputObject (
-                "Demo $($demo.Status) {0} Minutes and {1} Seconds" -f [int]$duration.TotalMinutes, [int]$duration.Seconds
-            )  -ForegroundColor Warning -Italic
+        if ($demo.EndMessage) {
+            $finishedMessage = 
+                Format-RichText -InputObject (
+                    $demo.EndMessage -f [int]$duration.TotalMinutes, [int]$duration.Seconds
+                )  -ForegroundColor Warning -Italic
         
-        # If the demo was interactive
-        if ($demo.Interactive) {
-            # writ the message
-            $finishedMessage | Out-Host
-            # and if we had a nested prompt, exit it
-            if ($NestedPromptLevel) {
-                $host.ExitNestedPrompt()
-            }
-        } elseif (-not $demo.Markdown) {
-            $finishedMessage -join ''            
+            # If the demo was interactive
+            if ($demo.Interactive) {
+                # writ the message
+                $finishedMessage | Out-Host
+                # and if we had a nested prompt, exit it
+                if ($NestedPromptLevel) {
+                    $host.ExitNestedPrompt()
+                }
+            } elseif (-not $demo.Markdown) {
+                $finishedMessage -join ''            
+            }    
         }
+        
         
         # Last but not least, reset the demo.
         $demo.Reset()

@@ -1,3 +1,11 @@
+## ShowDemo 0.1.4:
+                        
+* ShowDemo - Adding Recommendations (Fixes #63)
+* Demo Format - Honoring .StartMessage/.EndMessage (Fixes #62)
+* Show-Demo - Adding -StartMessage/-EndMessage (Fixes #61)
+
+---
+
 ## ShowDemo 0.1.3:
 
 * Adding support for prompts in demos

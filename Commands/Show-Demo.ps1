@@ -70,7 +70,15 @@
     # If set, will attempt to record the demo.
     # This presumes that [obs-powershell](https://github.com/StartAutomating/obs-powershell) is installed.
     [switch]
-    $Record
+    $Record,
+
+    # If provided, will set the message displayed at demo start.
+    [string]
+    $StartMessage,
+    
+    # If provided, will set the message displayed at demo start.
+    [string]
+    $EndMessage
     )
 
     process {
@@ -99,6 +107,9 @@
         if (-not $demoFile) {
             Write-Error "No demo to show"
         }
+
+        $demoFile | Add-Member StartMessage $StartMessage -Force
+        $demoFile | Add-Member EndMessage $EndMessage -Force
 
         if ($chapter) {
             $demoFile | Add-Member CurrentChapter $Chapter -Force
