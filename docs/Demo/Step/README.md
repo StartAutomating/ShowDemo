@@ -5,4 +5,5 @@
 
 
 * [HidePrompt](HidePrompt.md)
+* [Invoke](Invoke.md)
 * [ShowPrompt](ShowPrompt.md)
