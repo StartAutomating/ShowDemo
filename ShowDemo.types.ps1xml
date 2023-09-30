@@ -123,12 +123,20 @@ $null = New-Event -SourceIdentifier Demo.NextChapter -Sender $this -EventArgumen
       <ScriptMethod>
         <Name>NextStep</Name>
         <Script>
-                        $demo = $this
+                        &lt;#
+.SYNOPSIS
+    Go to the next demo step
+.DESCRIPTION
+    Advances a demo to the next step.
+#&gt;
+$demo = $this
 $demo.CurrentStep++
 # No more steps in this chapter
 if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
     $demo.NextChapter()
 }
+
+$null = New-Event -SourceIdentifier Demo.NextChapter -Sender $this -EventArguments $args
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
