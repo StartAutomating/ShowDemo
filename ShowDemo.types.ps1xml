@@ -142,8 +142,17 @@ $null = New-Event -SourceIdentifier Demo.NextChapter -Sender $this -EventArgumen
       <ScriptMethod>
         <Name>ProcessInput</Name>
         <Script>
-                        param($hostInput)
+                        &lt;#
+.SYNOPSIS
+    Processes demo input
+.DESCRIPTION
+    Processes user input to a demo file.
+#&gt;
+param($hostInput)
 $demo = $this
+
+$null = New-Event -SourceIdentifier Demo.ProcessInput -Sender $this -EventArguments @($hostinput)
+
 switch ($hostInput) {
     '?' {
         @{
