@@ -24,11 +24,11 @@ Demos can be saved to a Markdown (.md) file or a Clixml (.clixml/.clix)file
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Export-Demo -DemoPath .\demo.ps1 -OutputPath .\demo.md
 ```
-
 
 
 ---
