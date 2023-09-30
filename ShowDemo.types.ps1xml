@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<!-- Generated with EZOut 2.0: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
+<!-- Generated with EZOut 2.0.1: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
 <Types>
   <Type>
     <Name>Demo</Name>
@@ -253,8 +253,16 @@ $this | Add-Member Status $status -Force
       <ScriptMethod>
         <Name>Start</Name>
         <Script>
-                        $this | Add-Member NoteProperty Status Running -Force
+                        &lt;#
+.SYNOPSIS
+    Starts a Demo
+.DESCRIPTION
+    Starts a Demo file.
+#&gt;
+$this | Add-Member NoteProperty Status Running -Force
 $this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
+
+$null = New-Event -SourceIdentifier Demo.Start -Sender $this -EventArguments $args
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
