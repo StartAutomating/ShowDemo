@@ -194,7 +194,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             }
 
         # Now run over each segment of colorized output for the step
-        $strOut = @(foreach ($output in $demo.ColorizeStep($stepToRun)) {
+        $strOut = @(foreach ($output in $demo.ShowStep($stepToRun)) {
                 $outputCopy = @{} + $output
                 if ($output.InputObject) {
                     # Start off by setting the rich text formatting used for this sequence of tokens
