@@ -32,11 +32,11 @@ Shows a PowerShell Demo Script.
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Show-Demo
 ```
-
 
 
 ---
