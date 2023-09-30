@@ -261,9 +261,17 @@ $this | Add-Member NoteProperty CurrentStep ($newStep - 1) -Force
       <ScriptMethod>
         <Name>SetStatus</Name>
         <Script>
-                        param([string]$Status)
+                        &lt;#
+.SYNOPSIS
+    Sets demo status
+.DESCRIPTION
+    Sets the status of a demo.
+#&gt;
+param([string]$Status)
 
 $this | Add-Member Status $status -Force
+
+$null = New-Event -SourceIdentifier Demo.SetStatus -Sender $this -EventArguments @($Status)
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
