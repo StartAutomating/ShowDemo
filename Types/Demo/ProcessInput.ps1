@@ -1,5 +1,14 @@
+<#
+.SYNOPSIS
+    Processes demo input
+.DESCRIPTION
+    Processes user input to a demo file.
+#>
 param($hostInput)
 $demo = $this
+
+$null = New-Event -SourceIdentifier Demo.ProcessInput -Sender $this -EventArguments @($hostinput)
+
 switch ($hostInput) {
     '?' {
         @{
