@@ -11,4 +11,4 @@ if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
     $demo.NextChapter()
 }
 
-$null = New-Event -SourceIdentifier Demo.NextChapter -Sender $this -EventArguments $args
+$null = New-Event -SourceIdentifier Demo.NextStep -Sender $this -EventArguments $args
