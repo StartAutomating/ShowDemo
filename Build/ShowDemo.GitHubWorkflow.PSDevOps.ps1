@@ -3,7 +3,9 @@
 #requires -Module ShowDemo
 #requires -Module GitPub
 
-Import-BuildStep -Module ShowDemo
+Import-BuildStep -SourcePath (
+    Join-Path $PSScriptRoot 'GitHub'
+) -BuildSystem GitHubWorkflow
 
 Push-Location ($PSScriptRoot | Split-Path)
 
