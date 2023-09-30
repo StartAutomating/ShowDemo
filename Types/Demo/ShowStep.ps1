@@ -1,5 +1,7 @@
 param($step)
 
+$null = New-Event -SourceIdentifier Demo.ShowStep -Sender $this -EventArguments @($step)
+
 $stepTokens = [Management.Automation.PSParser]::Tokenize($step, [ref]$null)
 $PreviousToken = $null
 foreach ($_ in $stepTokens) {   
