@@ -33,11 +33,11 @@ Demos located in ShowDemo and all modules that tag ShowDemo will be automaticall
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Get-Demo
 ```
-
 
 
 ---
