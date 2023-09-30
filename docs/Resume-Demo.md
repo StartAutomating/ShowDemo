@@ -36,11 +36,11 @@ Resumes a Demo that was paused or debugged with `!`.
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Resume-Demo
 ```
-
 
 
 ---
