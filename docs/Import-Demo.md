@@ -40,11 +40,11 @@ Imports a Demo script.
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Import-Demo -DemoPath .\demo.ps1
 ```
-
 
 
 ---
