@@ -296,17 +296,24 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
     } -ScriptBlock {
         $demo = $_
         # Run it.
+        $DemoStepOutput = $null
+        
+        if ($PSStyle) {
+            $PSStyle.OutputRendering = 'ANSI'
+        }
+
         if ($demo.Interactive) {            
             [Console]::WriteLine()
             # If we're running interactively, pipe it out.
             Invoke-Expression -Command $demo.StepToRun *>&1 |
+                Out-String -OutVariable DemoStepOutput |
                 Out-Host
         } 
         else{
             # Otherwise, pipe it to Out-String
             $stepOutput = 
                 Invoke-Expression -Command $demo.StepToRun *>&1 |
-                    Out-String -Width 1kb
+                    Out-String -Width 1kb -OutVariable DemoStepOutput 
             
             # If we're outputting markdown
             if ($demo.Markdown) {               
@@ -328,6 +335,10 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             } else {
                 [Environment]::NewLine + $stepOutput
             }            
+        }
+
+        if ($DemoStepOutput) {
+            $null = New-Event -SourceIdentifier Demo.WriteOutput -Sender $demo -EventArguments $demo.StepToRun -MessageData $DemoStepOutput
         }
     }
 
