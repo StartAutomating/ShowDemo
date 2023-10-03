@@ -96,7 +96,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
 
         $ChapterHeadingSplat = [Ordered]@{ForegroundColor='Verbose';InputObject=$chapterHeading;Underline=$true}
         # and get a rich text version of that heading
-        $null = New-Event -SourceIdentifier Demo.WriteChapterName -Sender $demo -MessageData $ChapterHeadingSplat
+        $null = New-Event -SourceIdentifier Demo.WriteChapterName -Sender $demo -MessageData ([Ordered]@{} + $ChapterHeadingSplat)
         $currentChapterText = 
             Format-RichText @ChapterHeadingSplat
         
@@ -198,6 +198,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 $outputCopy = @{} + $output
                 if ($output.InputObject) {
                     # Start off by setting the rich text formatting used for this sequence of tokens
+                    $null = New-Event -SourceIdentifier Demo.WriteStep -Sender $demo -MessageData ([Ordered]@{} + $output)
                     $outputCopy.NoClear = $true
                     $outputCopy.InputObject = ''
                     # If we're running interactively, write that to the console now
