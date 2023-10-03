@@ -94,11 +94,11 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 ' ' + 
                     $demo.CurrentChapter.Name + ([Environment]::NewLine * 2)
 
+        $ChapterHeadingSplat = [Ordered]@{ForegroundColor='Verbose';InputObject=$chapterHeading;Underline=$true}
         # and get a rich text version of that heading
+        $null = New-Event -SourceIdentifier Demo.WriteChapterName -Sender $demo -MessageData $ChapterHeadingSplat
         $currentChapterText = 
-            Format-RichText -ForegroundColor Verbose -InputObject (
-                 $chapterHeading                    
-            ) -Underline
+            Format-RichText @ChapterHeadingSplat
         
         # If we are running interactively
         if ($_.Interactive) {
