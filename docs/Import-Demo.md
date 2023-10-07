@@ -43,7 +43,7 @@ Imports a Demo script.
 > EXAMPLE 1
 
 ```PowerShell
-Import-Demo -DemoPath .\demo.ps1
+Import-Demo -DemoName "Demo"
 ```
 
 
@@ -51,33 +51,18 @@ Import-Demo -DemoPath .\demo.ps1
 
 
 ### Parameters
-#### **DemoPath**
+#### **From**
 
-The path to the demo file.
-
-
-
-
-
-
-|Type      |Required|Position|PipelineInput        |Aliases                                  |
-|----------|--------|--------|---------------------|-----------------------------------------|
-|`[Object]`|true    |named   |true (ByPropertyName)|FullName<br/>DemoFile<br/>File<br/>Source|
-
-
-
-#### **DemoScript**
-
-A Demo Script block.
+The source of the demo.  This can be a string, file, command, module, or path.
 
 
 
 
 
 
-|Type           |Required|Position|PipelineInput |
-|---------------|--------|--------|--------------|
-|`[ScriptBlock]`|true    |named   |true (ByValue)|
+|Type        |Required|Position|PipelineInput        |Aliases                                                                           |
+|------------|--------|--------|---------------------|----------------------------------------------------------------------------------|
+|`[PSObject]`|true    |named   |true (ByPropertyName)|DemoPath<br/>DemoName<br/>DemoScript<br/>FullName<br/>DemoFile<br/>File<br/>Source|
 
 
 
@@ -88,8 +73,5 @@ A Demo Script block.
 
 ### Syntax
 ```PowerShell
-Import-Demo -DemoPath <Object> [<CommonParameters>]
-```
-```PowerShell
-Import-Demo -DemoScript <ScriptBlock> [<CommonParameters>]
+Import-Demo -From <PSObject> [<CommonParameters>]
 ```
