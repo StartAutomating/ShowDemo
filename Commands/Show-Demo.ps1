@@ -13,7 +13,8 @@
     [Alias('Start-Demo')]
     [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
     param(
-    # The source of the demo.  This can be a string, file, command, module, or path.        
+    # The source of the demo.  This can be a string, file, command, module, or path.
+    [Parameter(ValueFromPipelineByPropertyName)]
     [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
     [PSObject]
     $From,        
@@ -72,7 +73,8 @@
     )
 
     process {
-        $demoFile = Import-Demo -From $From
+        
+        $demoFile = Get-Demo -From $From
         
         if (-not $demoFile) {
             Write-Error "No demo to show"
