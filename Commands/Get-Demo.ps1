@@ -14,10 +14,17 @@ function Get-Demo {
     param(
     # The source of the demo.  This can be a string, file, command, module, or path.
     [Parameter(Mandatory,ParameterSetName='DemoFile',ValueFromPipelineByPropertyName)]
-    [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
     [PSObject]
     $From
     )
+    begin {
+        # If we have not initialized a cache and we're inside of a module
+        if (-not $script:CachedDemos.Count -and $MyInvocation.MyCommand.ScriptBlock.Module) {         
+            $MyModule = $MyInvocation.MyCommand.ScriptBlock.Module
+            Import-Demo -From $MyModule | Out-Null        
+        }
+    }
     
     process {
         if ($from) {
