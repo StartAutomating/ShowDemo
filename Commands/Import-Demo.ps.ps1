@@ -17,7 +17,7 @@
     param(
     # The source of the demo.  This can be a string, file, command, module, or path.
     [Parameter(Mandatory,ValueFromPipelineByPropertyName,ParameterSetName='DemoFile')]
-    [ValidateTypes({
+    [ValidateTypes(TypeName={
         [IO.FileInfo]
         [IO.DirectoryInfo]
         [Management.Automation.PathInfo]
