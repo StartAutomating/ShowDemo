@@ -31,7 +31,7 @@ function Import-Demo {
     return $true
     })]
     
-    [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
     [PSObject]
     $From    
     )
@@ -191,6 +191,7 @@ function Import-Demo {
                         Name       = $demoName
                         DemoFile   = $fileInfo.FullName
                         DemoScript = $DemoScript
+                        DemoText   = "$DemoScript"
                     }
             
             
@@ -220,7 +221,7 @@ function Import-Demo {
                 if ($from -match '\n') {
                     # If the -From had newlines, try to make a [ScriptBlock]
                     $fromScriptBlock = try { [ScriptBlock]::create($from) } catch { }
-                    if ($FromDirectory) { break }
+                    if ($fromScriptBlock) { break }
                 }                
                 foreach ($loadedModule in @(Get-Module)) {
                     # If we find the module, don't try to resolve -From as a path
