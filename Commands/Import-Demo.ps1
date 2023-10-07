@@ -37,7 +37,7 @@ function Import-Demo {
     )
     begin {
         $ChapterExpression  = '^\s{0,}(?<cn>(?:\d+\.){1,})\s{0,}'
-        $ValidDemoFile      = '(?>(?<=^demo)|\.demo)\.(?>ps1|clixml)$'
+        $ValidDemoFile      = [regex]::new('\.demo\.(?>ps1|clixml)$','IgnoreCase')
         if (-not $script:CachedDemos) {
             $script:CachedDemos = [Ordered]@{}
         }
