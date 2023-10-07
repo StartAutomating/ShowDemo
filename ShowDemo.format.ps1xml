@@ -214,8 +214,7 @@
             # and the step is a comment
             if ($stepToRun.IsComment) {
                 # replace the comment start and end
-                "$stepToRun" -replace '^\&lt;{0,1}\#{1}' -replace '\#\&gt;\s{0,}$'
-
+                ("$stepToRun" -replace '^\&lt;{0,1}\#{1}' -replace '\#\&gt;\s{0,}$').Trim()
             }
             # If the step was not a comment
             else
