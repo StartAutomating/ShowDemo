@@ -18,12 +18,7 @@ function Get-Demo {
     [PSObject]
     $From
     )
-    begin {
-        $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
-        if ($myModule) {
-            Import-Demo -From $myModule
-        }
-    }
+    
     process {
         if ($from) {
             Import-Demo -From $from
