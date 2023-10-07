@@ -60,9 +60,9 @@ The source of the demo.  This can be a string, file, command, module, or path.
 
 
 
-|Type        |Required|Position|PipelineInput        |Aliases                                                                           |
-|------------|--------|--------|---------------------|----------------------------------------------------------------------------------|
-|`[PSObject]`|true    |named   |true (ByPropertyName)|DemoPath<br/>DemoName<br/>DemoScript<br/>FullName<br/>DemoFile<br/>File<br/>Source|
+|Type        |Required|Position|PipelineInput        |Aliases                                                                                        |
+|------------|--------|--------|---------------------|-----------------------------------------------------------------------------------------------|
+|`[PSObject]`|true    |named   |true (ByPropertyName)|DemoPath<br/>DemoName<br/>DemoText<br/>DemoScript<br/>FullName<br/>DemoFile<br/>File<br/>Source|
 
 
 
