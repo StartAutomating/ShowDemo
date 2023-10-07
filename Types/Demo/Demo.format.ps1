@@ -159,8 +159,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             # and the step is a comment
             if ($stepToRun.IsComment) {
                 # replace the comment start and end
-                "$stepToRun" -replace '^\<{0,1}\#{1}' -replace '\#\>\s{0,}$'
-
+                ("$stepToRun" -replace '^\<{0,1}\#{1}' -replace '\#\>\s{0,}$').Trim()
             }
             # If the step was not a comment
             else
