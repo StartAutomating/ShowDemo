@@ -14,66 +14,25 @@
     #>
     [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
     param(
-    # The name of the demo
-    [Parameter(ValueFromPipelineByPropertyName,ParameterSetName='LoadedDemos')]
-    [string]
-    $DemoName,
-
-    # The path to the demo file.
-    [Parameter(Mandatory,ValueFromPipelineByPropertyName,ParameterSetName='DemoFile')]
-    [Alias('FullName', 'DemoFile', 'File', 'Source')]
-    $DemoPath,
-
-    # A Demo Script block.
-    [Parameter(Mandatory,ValueFromPipeline,ParameterSetName='DemoScript')]
-    [scriptblock]
-    $DemoScript
+    # The source of the demo.  This can be a string, file, command, module, or path.
+    [vbn(Mandatory,ParameterSetName='DemoFile')]
+    [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [PSObject]
+    $From
     )
 
     begin {
         $myModule = $MyInvocation.MyCommand.ScriptBlock.Module
+        if ($myModule) {
+            Import-Demo -From $myModule
+        }
     }
 
     process {
-        if ($PSCmdlet.ParameterSetName -in 'DemoFile', 'DemoScript') {
-            Import-Demo @psboundParameters
-            return
+        if ($from) {
+            Import-Demo -From $from
+        } elseif ($script:CachedDemos.Count) {
+            $script:CachedDemos.Values
         }
-
-        $filePaths =
-            @(
-            if ($myModule) {
-                $moduleRelationships = [ModuleRelationships()]$myModule
-                foreach ($relationship in $moduleRelationships) {
-                    $relationship.RelatedModule | Split-Path
-                }
-            } else {
-                $PSScriptRoot
-            }
-            )
-
-        $allDemoFiles =
-            @(all scripts in $filePaths that {
-                $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
-                $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-            } are demofiles)
-
-        if ($filePaths -ne $pwd) {
-            $currentDirectoryDemos = 
-                Get-ChildItem -Filter *.ps1 -Path $pwd |
-                Where-Object {
-                    $_.Name -match '^(?>demo|walkthru)\.ps1$' -or
-                    $_.Name -match '\.(?>demo|walkthru)\.ps1$'
-                }
-        
-            $allDemoFiles += @(
-                all scripts in $currentDirectoryDemos are demofiles
-            )
-        }
-        
-
-        $allDemoFiles |
-            Where-Object Name -like "*$demoName*" |
-            Import-Demo
     }
 }
