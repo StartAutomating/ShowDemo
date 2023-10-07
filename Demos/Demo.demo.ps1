@@ -59,20 +59,17 @@ Math in PowerShell is also really straightforward.
 
 # The joke for a long time has been PowerShell + a pulse is $50/hr.
 
-'$' * 50 |
-    Write-Host -ForegroundColor Green
+'$' * 50 | Write-Host
 
 '{0:c}' -f 50
 
 # 40 hours a week
-'$' * 50 * 40 |
-    Write-Host -ForegroundColor Green
+'$' * 50 * 40 | Write-Host
 
 '{0:c}' -f (50 * 40)
 
 # 52 weeks a year
-'$' * 50 * 40 * 52 |
-    Write-Host -ForegroundColor Green
+'$' * 50 * 40 * 52 | Write-Host
 '{0:c}' -f (50 * 40 * 52)
 
 # Learn PowerShell.
