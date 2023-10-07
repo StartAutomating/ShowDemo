@@ -195,8 +195,8 @@ function Import-Demo {
                     }
             
             
-                    if ($demoFile.Name) {
-                        $script:CachedDemos[$demoFile.Name] = $demoFile
+                    if ($demoName) {
+                        $script:CachedDemos[$demoName] = $demoFile
                     }
             
                     # And add each chapter to it
