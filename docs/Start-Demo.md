@@ -43,48 +43,18 @@ Show-Demo
 
 
 ### Parameters
-#### **DemoName**
+#### **From**
 
-The name of the demo
-
-
-
-
-
-
-|Type      |Required|Position|PipelineInput        |
-|----------|--------|--------|---------------------|
-|`[String]`|false   |named   |true (ByPropertyName)|
-
-
-
-#### **DemoPath**
-
-The path to the demo file.
+The source of the demo.  This can be a string, file, command, module, or path.
 
 
 
 
 
 
-|Type      |Required|Position|PipelineInput        |Aliases                                  |
-|----------|--------|--------|---------------------|-----------------------------------------|
-|`[Object]`|true    |named   |true (ByPropertyName)|FullName<br/>DemoFile<br/>File<br/>Source|
-
-
-
-#### **DemoScript**
-
-A Demo Script block.
-
-
-
-
-
-
-|Type           |Required|Position|PipelineInput |
-|---------------|--------|--------|--------------|
-|`[ScriptBlock]`|true    |named   |true (ByValue)|
+|Type        |Required|Position|PipelineInput|Aliases                                                                           |
+|------------|--------|--------|-------------|----------------------------------------------------------------------------------|
+|`[PSObject]`|false   |1       |false        |DemoPath<br/>DemoName<br/>DemoScript<br/>FullName<br/>DemoFile<br/>File<br/>Source|
 
 
 
@@ -99,7 +69,7 @@ The name of the chapter
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |named   |false        |
+|`[String]`|false   |2       |false        |
 
 
 
@@ -114,7 +84,7 @@ The current step (within -Chapter)
 
 |Type     |Required|Position|PipelineInput|
 |---------|--------|--------|-------------|
-|`[Int32]`|false   |named   |false        |
+|`[Int32]`|false   |3       |false        |
 
 
 
@@ -137,7 +107,7 @@ Valid Values:
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |named   |false        |
+|`[String]`|false   |4       |false        |
 
 
 
@@ -153,7 +123,7 @@ Otherwise, this will be the timespan to wait between words / letters being displ
 
 |Type        |Required|Position|PipelineInput|
 |------------|--------|--------|-------------|
-|`[TimeSpan]`|false   |named   |false        |
+|`[TimeSpan]`|false   |5       |false        |
 
 
 
@@ -169,7 +139,7 @@ If provided, implies -AutoPlay.
 
 |Type        |Required|Position|PipelineInput|Aliases          |
 |------------|--------|--------|-------------|-----------------|
-|`[TimeSpan]`|false   |named   |false        |PauseBetweenSteps|
+|`[TimeSpan]`|false   |6       |false        |PauseBetweenSteps|
 
 
 
@@ -247,7 +217,7 @@ If provided, will set the message displayed at demo start.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |named   |false        |
+|`[String]`|false   |7       |false        |
 
 
 
@@ -262,7 +232,7 @@ If provided, will set the message displayed at demo start.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |named   |false        |
+|`[String]`|false   |8       |false        |
 
 
 
@@ -273,11 +243,5 @@ If provided, will set the message displayed at demo start.
 
 ### Syntax
 ```PowerShell
-Show-Demo [-DemoName <String>] [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
-```
-```PowerShell
-Show-Demo -DemoPath <Object> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
-```
-```PowerShell
-Show-Demo -DemoScript <ScriptBlock> [-Chapter <String>] [-Step <Int32>] [-TypeStyle <String>] [-TypeSpeed <TimeSpan>] [-PauseBetweenStep <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [-StartMessage <String>] [-EndMessage <String>] [<CommonParameters>]
+Show-Demo [[-From] <PSObject>] [[-Chapter] <String>] [[-Step] <Int32>] [[-TypeStyle] <String>] [[-TypeSpeed] <TimeSpan>] [[-PauseBetweenStep] <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [[-StartMessage] <String>] [[-EndMessage] <String>] [<CommonParameters>]
 ```
