@@ -15,7 +15,7 @@
     param(
     # The source of the demo.  This can be a string, file, command, module, or path.
     [Parameter(ValueFromPipelineByPropertyName)]
-    [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
     [PSObject]
     $From,        
 
@@ -73,8 +73,13 @@
     )
 
     process {
+        $demoFile = 
+            if ($From) {
+                Get-Demo -From $From
+            } else {
+                Get-Demo
+            }
         
-        $demoFile = Get-Demo -From $From
         
         if (-not $demoFile) {
             Write-Error "No demo to show"

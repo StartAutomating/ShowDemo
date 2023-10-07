@@ -11,12 +11,13 @@
         Export-Demo -DemoPath .\demo.ps1 -OutputPath .\demo.md
     #>
     param(
-    # The path to the demo file.
+    # The source of the demo.  This can be a string, file, command, module, or path.
     [Parameter(Mandatory,
         ValueFromPipelineByPropertyName,
         ParameterSetName='DemoFile')]
-    [Alias('FullName', 'DemoFile', 'File', 'Source')]
-    $DemoPath,
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [PSObject]
+    $From,
 
     # The output path.  This is the location the demo will be saved to.
     [Parameter(Mandatory,ValueFromPipelineByPropertyName)]
@@ -87,7 +88,7 @@
 
     }
     process {
-        $demoContents = Get-Demo -File $DemoPath
+        $demoContents = Get-Demo -From $From
         if (-not $demoContents) { return }
         
         if ($OutputPath -notmatch $extensionPattern) {

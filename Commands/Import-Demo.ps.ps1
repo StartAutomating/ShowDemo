@@ -25,7 +25,7 @@
         [Management.Automation.PSModuleInfo]
         [string]
     })]
-    [Alias('DemoPath','DemoName','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
     [PSObject]
     $From    
     )
@@ -185,6 +185,7 @@
                 Name       = $demoName
                 DemoFile   = $fileInfo.FullName
                 DemoScript = $DemoScript
+                DemoText   = "$DemoScript"
             }
     
     
@@ -215,7 +216,7 @@
                 if ($from -match '\n') {
                     # If the -From had newlines, try to make a [ScriptBlock]
                     $fromScriptBlock = try { [ScriptBlock]::create($from) } catch { }
-                    if ($FromDirectory) { break }
+                    if ($fromScriptBlock) { break }
                 }                
 
                 foreach ($loadedModule in @(Get-Module)) {
