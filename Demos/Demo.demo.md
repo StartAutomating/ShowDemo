@@ -1,12 +1,9 @@
 
 ### 1. Hello World in PowerShell
 
- 'Hello world' is a really simple script to write in PowerShell.
-
+'Hello world' is a really simple script to write in PowerShell.
     
- You just put it in quotes.
-
-
+You just put it in quotes.
     
 
 ```PowerShell
@@ -15,17 +12,13 @@
 
     hello world
     
- This is because in PowerShell, unassigned output is returned.
-
-
+This is because in PowerShell, unassigned output is returned.
     
 ### 2. PowerShell and Objects
 
- Everything in PowerShell is an object.
-
+Everything in PowerShell is an object.
     
- So I can tell you how many characters there are in hello world just by getting the .Length
-
+So I can tell you how many characters there are in hello world just by getting the .Length
     
 
 ```PowerShell
@@ -36,9 +29,7 @@
     
 ### 3. Basic Math in PowerShell
 
-
 Math in PowerShell is also really straightforward.
-
     
 
 ```PowerShell
@@ -63,8 +54,7 @@ Math in PowerShell is also really straightforward.
     
 ### 4. Basic string formatting with PowerShell
 
- You can use .NET string formatting with PowerShell by using the -f operator
-
+You can use .NET string formatting with PowerShell by using the -f operator
     
 
 ```PowerShell
@@ -73,20 +63,13 @@ Math in PowerShell is also really straightforward.
 
     $1.99
     
- The format string in on the left, and the value you're formatting is on the right.
-
-
+The format string in on the left, and the value you're formatting is on the right.
     
- '{0:c}' means 'format as currency'
-
-
+'{0:c}' means 'format as currency'
     
- The value we are formatting is 1.99.
-
-
+The value we are formatting is 1.99.
     
- We can also use the .NET type [string] to do the formatting:
-
+We can also use the .NET type [string] to do the formatting:
     
 
 ```PowerShell
@@ -95,8 +78,7 @@ Math in PowerShell is also really straightforward.
 
     $1.99
     
- You can do some fun things with PowerShell, like multiply strings to repeat them.
-
+You can do some fun things with PowerShell, like multiply strings to repeat them.
     
 
 ```PowerShell
@@ -107,33 +89,19 @@ Math in PowerShell is also really straightforward.
     
 ### 5. The Object Pipeline (is money)
 
- A cool and unique part of PowerShell is the object pipeline
-
-
+A cool and unique part of PowerShell is the object pipeline
     
- You can send every object to a command by 'Piping' the object.
-
-
+You can send every object to a command by 'Piping' the object.
     
- You can pipe as many commands together as you would like.
-
-
+You can pipe as many commands together as you would like.
     
- So you basically program in PowerShell by connecting the dots.
-
-
+So you basically program in PowerShell by connecting the dots.
     
- To display information in a color, we use the built in command Write-Host.
-
-
+To display information in a color, we use the built in command Write-Host.
     
- So let's see how much money we can make by connecting the dots.
-
-
+So let's see how much money we can make by connecting the dots.
     
- The joke for a long time has been PowerShell + a pulse is $50/hr.
-
-
+The joke for a long time has been PowerShell + a pulse is $50/hr.
     
 
 ```PowerShell
@@ -150,8 +118,7 @@ Math in PowerShell is also really straightforward.
 
     $50.00
     
- 40 hours a week
-
+40 hours a week
     
 
 ```PowerShell
@@ -168,8 +135,7 @@ Math in PowerShell is also really straightforward.
 
     $2,000.00
     
- 52 weeks a year
-
+52 weeks a year
     
 
 ```PowerShell
@@ -186,13 +152,11 @@ Math in PowerShell is also really straightforward.
 
     $104,000.00
     
- Learn PowerShell.
-
+Learn PowerShell.
     
- Write Scripts.
-
+Write Scripts.
     
- Make Money.
+Make Money.
     
 
 
