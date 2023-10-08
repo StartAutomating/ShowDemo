@@ -31,7 +31,18 @@ foreach ($variant in '','animated') {
 svg @(
     SVG.GoogleFont -FontName $FontName    
     svg.symbol -ViewBox $powerShellChevron.svg.viewBox -Content $powerShellChevron.svg.symbol.InnerXml -Id psChevron
-    SVG.rect -Rx 30 -Ry (30 / $φ) -Stroke "#4488ff" -StrokeWidth 1% -Fill 'transparent' -Width 275 -Height (275 / $φ) -X 12.5 -Y (12.5 / $φ)
+    $RectSplat = [Ordered]@{
+        Rx=30
+        Ry=(30 / $φ)
+        Stroke="#4488ff"
+        StrokeWidth="1%"
+        Fill='transparent'
+        Width = 250
+        Height = 250 / $φ
+        X =  25
+        Y = 25 / $φ
+    }
+    SVG.rect @RectSplat
     
     svg.use -href '#psChevron'  -X '12.5%' -Y '-2%' -Width '12.5%' -Stroke '#4488ff' -Fill '#4488ff'
     svg.text @(
