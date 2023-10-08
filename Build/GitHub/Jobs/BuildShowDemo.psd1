@@ -4,7 +4,7 @@
     steps = @(
         @{
             name = 'Check out repository'
-            uses = 'actions/checkout@v2'
+            uses = 'actions/checkout@v3'
         },
         @{
             name = 'GitLogger'
@@ -44,6 +44,11 @@
             uses = './'
             id = 'ShowDemo'
         },
-        'RunHelpOut'
+        'RunHelpOut',
+        @{
+            name = 'PSA'
+            uses = 'StartAutomating/PSA@main'
+            id = 'PSA'
+        }
     )
 }
