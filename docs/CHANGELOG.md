@@ -1,3 +1,14 @@
+## ShowDemo 0.1.5:
+
+* Demos are now more eventful (#66)
+  * Nearly every part of ShowDemo transmits PowerShell engine events
+  * These can be used for highly customized display of demos
+* Refactoring all *-Demo commands to use a single -From parameter (#86)
+* Added Logo (#90)
+* Integrated PSA (#91)
+
+---
+
 ## ShowDemo 0.1.4:
                         
 * ShowDemo - Adding Recommendations (Fixes #63)

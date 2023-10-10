@@ -22,11 +22,7 @@ Hides the prompt within a demo.
 
 
 ### Examples
-#### EXAMPLE 1
-```PowerShell
-#.HidePrompt
-```
-
+.HidePrompt
 
 
 ---

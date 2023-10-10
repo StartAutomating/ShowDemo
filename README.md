@@ -1,3 +1,14 @@
+<div align='center'>
+<img src='Assets/ShowDemo-animated.svg' alt='ShowDemo' />
+<a href='https://www.powershellgallery.com/packages/ShowDemo/'>
+<img src='https://img.shields.io/powershellgallery/dt/ShowDemo' />
+</a>
+<br/>
+<a href='https://github.com/sponsors/StartAutomating'>❤️</a>
+<a href='https://github.com/StartAutomating/ShowDemo/stargazers'>⭐</a>
+</div>
+
+
 # Showcase your Scripts
 
 Want to showcase something you built in PowerShell?

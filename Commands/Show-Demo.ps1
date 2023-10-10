@@ -13,20 +13,11 @@
     [Alias('Start-Demo')]
     [CmdletBinding(DefaultParameterSetName='LoadedDemos')]
     param(
-    # The name of the demo
-    [Parameter(ValueFromPipelineByPropertyName,ParameterSetName='LoadedDemos')]
-    [string]
-    $DemoName,
-
-    # The path to the demo file.
-    [Parameter(Mandatory,ValueFromPipelineByPropertyName,ParameterSetName='DemoFile')]
-    [Alias('FullName', 'DemoFile', 'File', 'Source')]
-    $DemoPath,
-
-    # A Demo Script block.
-    [Parameter(Mandatory,ValueFromPipeline,ParameterSetName='DemoScript')]
-    [scriptblock]
-    $DemoScript,
+    # The source of the demo.  This can be a string, file, command, module, or path.
+    [Parameter(ValueFromPipelineByPropertyName)]
+    [Alias('DemoPath','DemoName','DemoText','DemoScript','FullName', 'DemoFile', 'File', 'Source')]    
+    [PSObject]
+    $From,        
 
     # The name of the chapter
     [string]
@@ -82,28 +73,14 @@
     )
 
     process {
-        $demoFile =
-            if ($DemoPath) {
-                Get-Demo -DemoPath $DemoPath
+        $demoFile = 
+            if ($From) {
+                Get-Demo -From $From
+            } else {
+                Get-Demo
             }
-            elseif ($DemoScript) {
-                Get-Demo -DemoScript $DemoScript
-            }
-            elseif ($DemoName) {
-                Get-Demo -DemoName $DemoName
-            }
-            else {
-                $allDemos = Get-Demo
-                $justNamedDemo = $allDemos |
-                    Where-Object Name -eq 'Demo' |
-                    Select-Object -First 1
-                if (-not $justNamedDemo) {
-                    $allDemos | Select-Object -First 1
-                } else {
-                    $justNamedDemo
-                }
-            }
-
+        
+        
         if (-not $demoFile) {
             Write-Error "No demo to show"
         }

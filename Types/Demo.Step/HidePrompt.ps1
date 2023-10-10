@@ -13,3 +13,5 @@ $step
 )
 
 $this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $false
+
+$null = New-Event -SourceIdentifier Demo.HidePrompt -Sender $this.Chapter.Demo -EventArguments @($step)

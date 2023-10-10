@@ -1,13 +1,228 @@
 <?xml version="1.0" encoding="utf-16"?>
-<!-- Generated with EZOut 2.0: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
+<!-- Generated with EZOut 2.0.1: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
 <Types>
   <Type>
     <Name>Demo</Name>
     <Members>
       <ScriptMethod>
-        <Name>ColorizeStep</Name>
+        <Name>Dump</Name>
+        <Script>
+                        $demoContent =
+@(foreach ($chapter in $this.Chapters) {
+    "# $($chapter.Number) $($chapter.Name)"
+    $stepIndex = 0
+    foreach ($step in $chapter.Steps) {
+        $stepIndex++
+        if ($this.CurrentChapter -eq $chapter -and $this.CurrentStep -eq $stepIndex) {
+            "    &lt;# *** You Are Here! *** #&gt;"
+        }
+        $step
+
+    }
+}) -join [Environment]::NewLine
+
+$demoContent
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>NextChapter</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Go to the Next Chapter in a Demo
+.DESCRIPTION
+    Advances a demo to the next chapter.
+#&gt;
+$demo = $this
+$chapterIndex = $demo.Chapters.IndexOf($demo.CurrentChapter)
+$chapterIndex++
+if (-not $demo.Chapters[$chapterIndex]) {
+    $demo | Add-Member NoteProperty DemoFinished ([datetime]::Now) -Force
+    $null = New-Event -SourceIdentifier Demo.Complete -Sender $this
+} else {
+    $null = New-Event -SourceIdentifier Demo.NextChapter -Sender $this -EventArguments $demo.Chapters[$chapterIndex].Name -MessageData $demo.Chapters[$chapterIndex]
+    $demo | Add-Member NoteProperty CurrentChapter $demo.Chapters[$chapterIndex] -Force
+    $demo | Add-Member NoteProperty CurrentStep 0 -Force
+}
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>NextStep</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Go to the next demo step
+.DESCRIPTION
+    Advances a demo to the next step.
+#&gt;
+$demo = $this
+$demo.CurrentStep++
+# No more steps in this chapter
+if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
+    $demo.NextChapter()
+}
+
+$null = New-Event -SourceIdentifier Demo.NextStep -Sender $this -EventArguments $args
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>ProcessInput</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Processes demo input
+.DESCRIPTION
+    Processes user input to a demo file.
+#&gt;
+param($hostInput)
+$demo = $this
+
+$null = New-Event -SourceIdentifier Demo.ProcessInput -Sender $this -EventArguments @($hostinput)
+
+switch ($hostInput) {
+    '?' {
+        @{
+            ForegroundColor = 'Cyan'
+            InputObject = @"
+Running demo: $($demo.Name)
+(q) Quit
+(# ...) Goto Chapter/Step
+(f ...) Find cmds using X
+(t) Timecheck
+(s) Skip
+(!) Debug Demo
+(d) Dump demo
+"@
+        }
+    }
+    'q' {
+        $demo.Stop()
+    }
+    'd' {
+        $demoDump = $demo.Dump()
+        $demoDump | Out-Host
+        if (Get-Command Set-Clipboard -ErrorAction SilentlyContinue) {
+            $demoDump | Set-Clipboard
+        }        
+    }
+    's' {
+        $demo | Add-Member NoteProperty StepToRun $null -Force
+    }
+    't' {
+        $duration = [Datetime]::now - $demo.DemoStarted
+        @{
+            ForegroundColor = 'Warning'
+            Italic = $true
+            InputObject = 
+                "{0} {1} [{2}m, {3}s]" -f $demo.Name, $demo.Status, [int]$Duration.TotalMinutes, [int]$Duration.Seconds
+        }
+    }
+    '!' {
+        Write-Warning "Debugging Demo:  Use Resume-Demo to resume."
+        $host.EnterNestedPrompt()
+        
+    }
+    default {
+        
+        if ($hostInput -match '^\s{0,}\#\s{0,}\d') {
+            $demo | Add-Member NoteProperty StepToRun $null -Force
+            $demo.SetChapter($hostInput -replace '^\s{0,}\#\s{0,}')
+        }
+        elseif ($hostInput -match '^\s{0,}(?&gt;f|/)\s{0,}\S') {
+            $toFind = $hostInput -replace '^\s{0,}(?&gt;f|/)\s{0,}'
+            Select-String -Path $demo.DemoFile -Pattern $toFind | Out-Host
+            {}
+        }
+    }        
+}
+
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>Reset</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Resets a demo
+.DESCRIPTION
+    Resets a demo file, so that it can be replayed.
+#&gt;
+$this | Add-Member NoteProperty Status "NotStarted" -Force
+$this | Add-Member NoteProperty StepToRun $null -Force
+$demo | Add-Member NoteProperty DemoFinished $null -Force
+$demo | Add-Member NoteProperty DemoStarted  $null -Force
+$demo | Add-Member NoteProperty CurrentChapter $null -Force
+$demo | Add-Member NoteProperty CurrentStep $null -Force
+
+$null = New-Event -SourceIdentifier Demo.Reset -Sender $this -EventArguments $args
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>SetChapter</Name>
+        <Script>
+                        param([string]$Chapter)
+
+if (-not $this.Chapters) { throw "No Chapters" }
+$chapterParts = @($chapter -split '\.')
+$potentialChapterNumbers = @(
+    if ($chapterParts.Length -gt 1) {
+        ($chapterParts[0..($chapterParts.Length - 2)] -join '\.') + '*'
+    }    
+    $chapter + '*'
+)
+
+
+
+$newChapter, $newStep = 
+    :nextChapter foreach ($chap in $this.Chapters) {
+        foreach ($potential in $potentialChapterNumbers) {
+            if ($chap.Number -like $potential) {
+                if ($potential -ne ($Chapter + '*')) {
+                    # Setting chapter and step number
+                    $chap, $chapterParts[-1] -as [int]
+                    break nextChapter
+                } else {
+                    $chap, 1
+    
+                }
+            }
+        }        
+        
+    }
+
+if (-not $newChapter) {
+    throw "Could not find chapter '$chapter'"
+}
+
+$this | Add-Member NoteProperty CurrentChapter $newChapter -Force
+$this | Add-Member NoteProperty CurrentStep ($newStep - 1) -Force
+
+
+
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>SetStatus</Name>
+        <Script>
+                        &lt;#
+.SYNOPSIS
+    Sets demo status
+.DESCRIPTION
+    Sets the status of a demo.
+#&gt;
+param([string]$Status)
+
+$this | Add-Member Status $status -Force
+
+$null = New-Event -SourceIdentifier Demo.SetStatus -Sender $this -EventArguments @($Status)
+                    </Script>
+      </ScriptMethod>
+      <ScriptMethod>
+        <Name>ShowStep</Name>
         <Script>
                         param($step)
+
+$null = New-Event -SourceIdentifier Demo.ShowStep -Sender $this -EventArguments @($step)
 
 $stepTokens = [Management.Automation.PSParser]::Tokenize($step, [ref]$null)
 $PreviousToken = $null
@@ -79,182 +294,18 @@ foreach ($_ in $stepTokens) {
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
-        <Name>Dump</Name>
-        <Script>
-                        $demoContent =
-@(foreach ($chapter in $this.Chapters) {
-    "# $($chapter.Number) $($chapter.Name)"
-    $stepIndex = 0
-    foreach ($step in $chapter.Steps) {
-        $stepIndex++
-        if ($this.CurrentChapter -eq $chapter -and $this.CurrentStep -eq $stepIndex) {
-            "    &lt;# *** You Are Here! *** #&gt;"
-        }
-        $step
-
-    }
-}) -join [Environment]::NewLine
-
-$demoContent
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>NextChapter</Name>
-        <Script>
-                        $demo = $this
-$chapterIndex = $demo.Chapters.IndexOf($demo.CurrentChapter)
-$chapterIndex++
-if (-not $demo.Chapters[$chapterIndex]) {
-    $demo | Add-Member NoteProperty DemoFinished ([datetime]::Now) -Force
-} else {
-    $demo | Add-Member NoteProperty CurrentChapter $demo.Chapters[$chapterIndex] -Force
-    $demo | Add-Member NoteProperty CurrentStep 0 -Force
-}
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>NextStep</Name>
-        <Script>
-                        $demo = $this
-$demo.CurrentStep++
-# No more steps in this chapter
-if (-not $demo.CurrentChapter.Steps[$demo.CurrentStep - 1]) {
-    $demo.NextChapter()
-}
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>ProcessInput</Name>
-        <Script>
-                        param($hostInput)
-$demo = $this
-switch ($hostInput) {
-    '?' {
-        @{
-            ForegroundColor = 'Cyan'
-            InputObject = @"
-Running demo: $($demo.Name)
-(q) Quit
-(# ...) Goto Chapter/Step
-(f ...) Find cmds using X
-(t) Timecheck
-(s) Skip
-(!) Debug Demo
-(d) Dump demo
-"@
-        }
-    }
-    'q' {
-        $demo.Stop()
-    }
-    'd' {
-        $demoDump = $demo.Dump()
-        $demoDump | Out-Host
-        if (Get-Command Set-Clipboard -ErrorAction SilentlyContinue) {
-            $demoDump | Set-Clipboard
-        }        
-    }
-    's' {
-        $demo | Add-Member NoteProperty StepToRun $null -Force
-    }
-    't' {
-        $duration = [Datetime]::now - $demo.DemoStarted
-        @{
-            ForegroundColor = 'Warning'
-            Italic = $true
-            InputObject = 
-                "{0} {1} [{2}m, {3}s]" -f $demo.Name, $demo.Status, [int]$Duration.TotalMinutes, [int]$Duration.Seconds
-        }
-    }
-    '!' {
-        Write-Warning "Debugging Demo:  Use Resume-Demo to resume."
-        $host.EnterNestedPrompt()
-        
-    }
-    default {
-        
-        if ($hostInput -match '^\s{0,}\#\s{0,}\d') {
-            $demo | Add-Member NoteProperty StepToRun $null -Force
-            $demo.SetChapter($hostInput -replace '^\s{0,}\#\s{0,}')
-        }
-        elseif ($hostInput -match '^\s{0,}(?&gt;f|/)\s{0,}\S') {
-            $toFind = $hostInput -replace '^\s{0,}(?&gt;f|/)\s{0,}'
-            Select-String -Path $demo.DemoFile -Pattern $toFind | Out-Host
-            {}
-        }
-    }        
-}
-
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>Reset</Name>
-        <Script>
-                        $this | Add-Member NoteProperty Status "NotStarted" -Force
-$this | Add-Member NoteProperty StepToRun $null -Force
-$demo | Add-Member NoteProperty DemoFinished $null -Force
-$demo | Add-Member NoteProperty DemoStarted  $null -Force
-$demo | Add-Member NoteProperty CurrentChapter $null -Force
-$demo | Add-Member NoteProperty CurrentStep $null -Force
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>SetChapter</Name>
-        <Script>
-                        param([string]$Chapter)
-
-if (-not $this.Chapters) { throw "No Chapters" }
-$chapterParts = @($chapter -split '\.')
-$potentialChapterNumbers = @(
-    if ($chapterParts.Length -gt 1) {
-        ($chapterParts[0..($chapterParts.Length - 2)] -join '\.') + '*'
-    }    
-    $chapter + '*'
-)
-
-
-
-$newChapter, $newStep = 
-    :nextChapter foreach ($chap in $this.Chapters) {
-        foreach ($potential in $potentialChapterNumbers) {
-            if ($chap.Number -like $potential) {
-                if ($potential -ne ($Chapter + '*')) {
-                    # Setting chapter and step number
-                    $chap, $chapterParts[-1] -as [int]
-                    break nextChapter
-                } else {
-                    $chap, 1
-    
-                }
-            }
-        }        
-        
-    }
-
-if (-not $newChapter) {
-    throw "Could not find chapter '$chapter'"
-}
-
-$this | Add-Member NoteProperty CurrentChapter $newChapter -Force
-$this | Add-Member NoteProperty CurrentStep ($newStep - 1) -Force
-
-
-
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
-        <Name>SetStatus</Name>
-        <Script>
-                        param([string]$Status)
-
-$this | Add-Member Status $status -Force
-                    </Script>
-      </ScriptMethod>
-      <ScriptMethod>
         <Name>Start</Name>
         <Script>
-                        $this | Add-Member NoteProperty Status Running -Force
+                        &lt;#
+.SYNOPSIS
+    Starts a Demo
+.DESCRIPTION
+    Starts a Demo file.
+#&gt;
+$this | Add-Member NoteProperty Status Running -Force
 $this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
+
+$null = New-Event -SourceIdentifier Demo.Start -Sender $this -EventArguments $args
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
@@ -266,11 +317,19 @@ $this | Add-Member NoteProperty DemoStarted ([DateTime]::Now) -Force
       <ScriptMethod>
         <Name>Stop</Name>
         <Script>
-                        $this | Add-Member NoteProperty Status Stopped -Force
+                        &lt;#
+.SYNOPSIS
+    Stops a demo
+.DESCRIPTION
+    Stops a demo that is currently running
+#&gt;
+$this | Add-Member NoteProperty Status Stopped -Force
 $this | Add-Member NoteProperty StepToRun $null -Force
 $this | Add-Member NoteProperty DemoFinished ([datetime]::Now) -Force
 $demo | Add-Member NoteProperty CurrentChapter $null -Force
 $demo | Add-Member NoteProperty CurrentStep $null -Force
+
+$null = New-Event -SourceIdentifier Demo.Stop -Sender $this -EventArguments $args
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
@@ -422,18 +481,30 @@ $step
 )
 
 $this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $false
+
+$null = New-Event -SourceIdentifier Demo.HidePrompt -Sender $this.Chapter.Demo -EventArguments @($step)
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
         <Name>Invoke</Name>
         <Script>
-                        $hiddenStep = $this.HiddenStep
+                        &lt;#
+.SYNOPSIS
+    Invokes a demo step
+.DESCRIPTION
+    Invokes a step in a demo file.
+#&gt;
+$hiddenStep = $this.HiddenStep
 
-if (-not $hiddenStep) {
-    Invoke-Expression $this
-} elseif ($this.$($hiddenStep.StepType).Invoke) {
-    $this.$($hiddenStep.StepType).Invoke($hiddenStep.Arguments)
-}
+$invokeResults = 
+    if (-not $hiddenStep) {
+        Invoke-Expression $this
+    } elseif ($this.$($hiddenStep.StepType).Invoke) {
+        $this.$($hiddenStep.StepType).Invoke($hiddenStep.Arguments)
+    }
+$invokeResults
+$null = New-Event -SourceIdentifier Demo.Step.Invoke -Sender $this -EventArguments $args -MessageData $invokeResults
+
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
@@ -454,14 +525,26 @@ $step
 )
 
 $this.Chapter.Demo | Add-Member NoteProperty ShowPrompt $true
+
+$null = New-Event -SourceIdentifier Demo.ShowPrompt -Sender $this.Chapter.Demo -EventArguments @($step)
                     </Script>
       </ScriptMethod>
       <ScriptMethod>
         <Name>Silent</Name>
         <Script>
-                        param($silentStep)
+                        &lt;#
+.SYNOPSIS
+    Run a silent step
+.DESCRIPTION
+    Run a silent step of a demo.
+    
+    Silent steps do not display their results.
+#&gt;
+param($silentStep)
 
 Invoke-Expression $silentStep | Out-Null
+
+$null = New-Event -SourceIdentifier Demo.Step.Silent -Sender $this -EventArguments @($silentStep)
                     </Script>
       </ScriptMethod>
       <ScriptProperty>

@@ -5,7 +5,7 @@ describe ShowDemo {
     }
 
     it 'Can export a demo as markdown' {        
-        $exportedDemo = Get-Demo -DemoName demo | Export-Demo -OutputPath .\demo.md
+        $exportedDemo = Get-Demo -DemoName Demo | Export-Demo -OutputPath .\demo.md
         $exportedDemo.Extension | Should -be '.md'
         $exportedContent = Get-Content $exportedDemo.FullName -Raw
         $exportedContent | Should -BeLike '*###*1.*'

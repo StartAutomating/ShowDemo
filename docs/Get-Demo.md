@@ -33,59 +33,29 @@ Demos located in ShowDemo and all modules that tag ShowDemo will be automaticall
 
 
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Get-Demo
 ```
-
 
 
 ---
 
 
 ### Parameters
-#### **DemoName**
+#### **From**
 
-The name of the demo
-
-
-
-
-
-
-|Type      |Required|Position|PipelineInput        |
-|----------|--------|--------|---------------------|
-|`[String]`|false   |named   |true (ByPropertyName)|
-
-
-
-#### **DemoPath**
-
-The path to the demo file.
+The source of the demo.  This can be a string, file, command, module, or path.
 
 
 
 
 
 
-|Type      |Required|Position|PipelineInput        |Aliases                                  |
-|----------|--------|--------|---------------------|-----------------------------------------|
-|`[Object]`|true    |named   |true (ByPropertyName)|FullName<br/>DemoFile<br/>File<br/>Source|
-
-
-
-#### **DemoScript**
-
-A Demo Script block.
-
-
-
-
-
-
-|Type           |Required|Position|PipelineInput |
-|---------------|--------|--------|--------------|
-|`[ScriptBlock]`|true    |named   |true (ByValue)|
+|Type        |Required|Position|PipelineInput        |Aliases                                                                                        |
+|------------|--------|--------|---------------------|-----------------------------------------------------------------------------------------------|
+|`[PSObject]`|true    |named   |true (ByPropertyName)|DemoPath<br/>DemoName<br/>DemoText<br/>DemoScript<br/>FullName<br/>DemoFile<br/>File<br/>Source|
 
 
 
@@ -96,11 +66,8 @@ A Demo Script block.
 
 ### Syntax
 ```PowerShell
-Get-Demo [-DemoName <String>] [<CommonParameters>]
+Get-Demo [<CommonParameters>]
 ```
 ```PowerShell
-Get-Demo -DemoPath <Object> [<CommonParameters>]
-```
-```PowerShell
-Get-Demo -DemoScript <ScriptBlock> [<CommonParameters>]
+Get-Demo -From <PSObject> [<CommonParameters>]
 ```

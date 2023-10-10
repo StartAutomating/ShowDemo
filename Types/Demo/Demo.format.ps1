@@ -94,11 +94,11 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 ' ' + 
                     $demo.CurrentChapter.Name + ([Environment]::NewLine * 2)
 
+        $ChapterHeadingSplat = [Ordered]@{ForegroundColor='Verbose';InputObject=$chapterHeading;Underline=$true}
         # and get a rich text version of that heading
+        $null = New-Event -SourceIdentifier Demo.WriteChapterName -Sender $demo -MessageData ([Ordered]@{} + $ChapterHeadingSplat)
         $currentChapterText = 
-            Format-RichText -ForegroundColor Verbose -InputObject (
-                 $chapterHeading                    
-            ) -Underline
+            Format-RichText @ChapterHeadingSplat
         
         # If we are running interactively
         if ($_.Interactive) {
@@ -138,12 +138,16 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
     Write-FormatViewExpression -If {
         $_.StepToRun -and 
         $_.ShowPrompt -and
-        (
-            (-not $_.DemoFinished) -and # and the demo's not done            
-            $_.Interactive # and we're running interactively
-        ) 
+        (-not $_.DemoFinished)                           
     } -ScriptBlock {
-        prompt | Out-Host
+        $promptOutput = prompt
+        $null = New-Event -SourceIdentifier Demo.WritePrompt -Sender $demo -MessageData $promptOutput
+        if ($_.Interactive) {
+            $promptOutput | Out-Host
+        } # and we're running interactively
+        else {            
+            $promptOutput | Out-String            
+        }
     }
 
     Write-FormatViewExpression -If {
@@ -159,8 +163,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             # and the step is a comment
             if ($stepToRun.IsComment) {
                 # replace the comment start and end
-                "$stepToRun" -replace '^\<{0,1}\#{1}' -replace '\#\>\s{0,}$'
-
+                ("$stepToRun" -replace '^\<{0,1}\#{1}' -replace '\#\>\s{0,}$').Trim()
             }
             # If the step was not a comment
             else
@@ -194,10 +197,11 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             }
 
         # Now run over each segment of colorized output for the step
-        $strOut = @(foreach ($output in $demo.ColorizeStep($stepToRun)) {
+        $strOut = @(foreach ($output in $demo.ShowStep($stepToRun)) {
                 $outputCopy = @{} + $output
                 if ($output.InputObject) {
                     # Start off by setting the rich text formatting used for this sequence of tokens
+                    $null = New-Event -SourceIdentifier Demo.WriteStep -Sender $demo -MessageData ([Ordered]@{} + $output)
                     $outputCopy.NoClear = $true
                     $outputCopy.InputObject = ''
                     # If we're running interactively, write that to the console now
@@ -295,17 +299,24 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
     } -ScriptBlock {
         $demo = $_
         # Run it.
+        $DemoStepOutput = $null
+        
+        if ($PSStyle) {
+            $PSStyle.OutputRendering = 'ANSI'
+        }
+
         if ($demo.Interactive) {            
             [Console]::WriteLine()
             # If we're running interactively, pipe it out.
             Invoke-Expression -Command $demo.StepToRun *>&1 |
+                Out-String -OutVariable DemoStepOutput |
                 Out-Host
         } 
         else{
             # Otherwise, pipe it to Out-String
             $stepOutput = 
                 Invoke-Expression -Command $demo.StepToRun *>&1 |
-                    Out-String -Width 1kb
+                    Out-String -Width 1kb -OutVariable DemoStepOutput 
             
             # If we're outputting markdown
             if ($demo.Markdown) {               
@@ -327,6 +338,10 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             } else {
                 [Environment]::NewLine + $stepOutput
             }            
+        }
+
+        if ($DemoStepOutput) {
+            $null = New-Event -SourceIdentifier Demo.WriteOutput -Sender $demo -EventArguments $demo.StepToRun -MessageData $DemoStepOutput
         }
     }
 
