@@ -138,12 +138,16 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
     Write-FormatViewExpression -If {
         $_.StepToRun -and 
         $_.ShowPrompt -and
-        (
-            (-not $_.DemoFinished) -and # and the demo's not done            
-            $_.Interactive # and we're running interactively
-        ) 
+        (-not $_.DemoFinished)                           
     } -ScriptBlock {
-        prompt | Out-Host
+        $promptOutput = prompt
+        $null = New-Event -SourceIdentifier Demo.WritePrompt -Sender $demo -MessageData $promptOutput
+        if ($_.Interactive) {
+            $promptOutput | Out-Host
+        } # and we're running interactively
+        else {            
+            $promptOutput | Out-String            
+        }
     }
 
     Write-FormatViewExpression -If {
