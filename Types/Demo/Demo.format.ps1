@@ -305,12 +305,22 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             $PSStyle.OutputRendering = 'ANSI'
         }
 
-        if ($demo.Interactive) {            
+        if ($demo.Interactive) {
             [Console]::WriteLine()
-            # If we're running interactively, pipe it out.
-            Invoke-Expression -Command $demo.StepToRun *>&1 |
-                Out-String -OutVariable DemoStepOutput |
-                Out-Host
+            if ($demo.PauseBetweenLine) {
+                # If we're running interactively, pipe it out.
+                $demoOutputLines = @(Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String -OutVariable DemoStepOutput) -split '(?>\r\n|\n)'
+                foreach ($demoOutputLine in $demoOutputLines) {
+                    [Console]::WriteLine($demoOutputLine)
+                    Start-Sleep -Milliseconds $demo.PauseBetweenLine.TotalMilliseconds
+                }
+            } else {
+                # If we're running interactively, pipe it out.
+                Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String -OutVariable DemoStepOutput |
+                    Out-Host
+            }            
         } 
         else{
             # Otherwise, pipe it to Out-String
