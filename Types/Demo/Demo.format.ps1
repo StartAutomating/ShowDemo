@@ -309,11 +309,11 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             [Console]::WriteLine()
             if ($demo.PauseBetweenLine) {
                 # If we're running interactively, pipe it out.
-                $demoOutputLines = @(Invoke-Expression -Command $demo.StepToRun *>&1 |
-                    Out-String -OutVariable DemoStepOutput) -split '(?>\r\n|\n)'
-                foreach ($demoOutputLine in $demoOutputLines) {
-                    [Console]::WriteLine($demoOutputLine)
+                $DemoStepOutput = @(Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String) -split '(?>\r\n|\n)'
+                foreach ($demoOutputLine in $DemoStepOutput) {
                     Start-Sleep -Milliseconds $demo.PauseBetweenLine.TotalMilliseconds
+                    Write-Host $demoOutputLine                    
                 }
             } else {
                 # If we're running interactively, pipe it out.
