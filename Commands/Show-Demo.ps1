@@ -36,7 +36,7 @@
     # If this is an integer less than 10000, it will be considered 'words per minute'
     # Otherwise, this will be the timespan to wait between words / letters being displayed.
     [timespan]
-    $TypeSpeed,
+    $TypeSpeed = [Timespan]"00:00:00.027",
 
     # The amount of time to wait between each step.
     # If provided, implies -AutoPlay.
@@ -105,10 +105,10 @@
 
         $demoFile | Add-Member TypeStyle $TypeStyle -Force
         if ($TypeStyle -eq 'Letters' -and -not $TypeSpeed) {
-            $TypeSpeed = [timespan]::FromMilliseconds(1)
+            $TypeSpeed = [timespan]::FromMilliseconds(27)
         }
         elseif ($TypeStyle -eq 'Words' -and -not $TypeSpeed) {
-            $TypeSpeed = [timespan]::FromMilliseconds(30)
+            $TypeSpeed = [timespan]::FromMilliseconds(37)
         }
         $demoFile | Add-Member TypeSpeed $TypeSpeed -Force
 
