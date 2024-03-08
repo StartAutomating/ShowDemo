@@ -76,6 +76,14 @@ If provided, implies -AutoPlay.
 |------------|--------|--------|-------------|-----------------|
 |`[TimeSpan]`|false   |6       |false        |PauseBetweenSteps|
 
+#### **PauseBetweenLine**
+The amount of time to wait between each line.
+This can help demos that display a lot of information at once.
+
+|Type        |Required|Position|PipelineInput|Aliases          |
+|------------|--------|--------|-------------|-----------------|
+|`[TimeSpan]`|false   |7       |false        |PauseBetweenLines|
+
 #### **AutoPlay**
 If set, will automatically play demos.
 Use -PauseBetweenStep to specify how long to wait between each step.
@@ -112,18 +120,18 @@ If provided, will set the message displayed at demo start.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |7       |false        |
+|`[String]`|false   |8       |false        |
 
 #### **EndMessage**
 If provided, will set the message displayed at demo start.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |8       |false        |
+|`[String]`|false   |9       |false        |
 
 ---
 
 ### Syntax
 ```PowerShell
-Show-Demo [[-From] <PSObject>] [[-Chapter] <String>] [[-Step] <Int32>] [[-TypeStyle] <String>] [[-TypeSpeed] <TimeSpan>] [[-PauseBetweenStep] <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [[-StartMessage] <String>] [[-EndMessage] <String>] [<CommonParameters>]
+Show-Demo [[-From] <PSObject>] [[-Chapter] <String>] [[-Step] <Int32>] [[-TypeStyle] <String>] [[-TypeSpeed] <TimeSpan>] [[-PauseBetweenStep] <TimeSpan>] [[-PauseBetweenLine] <TimeSpan>] [-AutoPlay] [-NonInteractive] [-ShowPrompt] [-Record] [[-StartMessage] <String>] [[-EndMessage] <String>] [<CommonParameters>]
 ```
