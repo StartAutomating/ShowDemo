@@ -58,12 +58,12 @@ foreach ($_ in $stepTokens) {
             'Operator','GroupStart', 'GroupEnd'
     )  {
         @{
-            ForegroundColor='Output'
+            ForegroundColor='White'
             InputObject=$Content
         }
     } else {
         @{
-            ForegroundColor='Output'
+            ForegroundColor='White'
             InputObject=$Content
         }
     }
