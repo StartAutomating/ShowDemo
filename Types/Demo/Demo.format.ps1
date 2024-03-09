@@ -47,6 +47,10 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 ''
             }
         }
+
+        if ($demo.Interactive) {
+            [Console]::OutputEncoding = $OutputEncoding
+        }
     }
 
     Write-FormatViewExpression -If {
@@ -206,7 +210,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                     $outputCopy.InputObject = ''
                     # If we're running interactively, write that to the console now
                     if ($demo.Interactive) {
-                        [Console]::Write((Format-RichText @outputCopy))
+                        [Console]::Write((Format-RichText @outputCopy) -join '')
                     } else {
                         # otherwise, add it to $strOut.
                         Format-RichText @outputCopy
@@ -233,8 +237,8 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                         if (-not $chunk) { continue }
                         # If running interactively,
                         if ($demo.Interactive) {
-                            # write it to the console
-                            [Console]::Write("$chunk")
+                            # write it to the console                            
+                            [Console]::Write("$chunk")                            
                         } else {
                             # otherwise, add it to $strOut
                             $chunk
