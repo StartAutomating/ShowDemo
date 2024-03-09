@@ -36,13 +36,19 @@
     # If this is an integer less than 10000, it will be considered 'words per minute'
     # Otherwise, this will be the timespan to wait between words / letters being displayed.
     [timespan]
-    $TypeSpeed,
+    $TypeSpeed = [Timespan]"00:00:00.0028",
 
     # The amount of time to wait between each step.
     # If provided, implies -AutoPlay.
     [Alias('PauseBetweenSteps')]
     [timespan]
     $PauseBetweenStep,
+
+    # The amount of time to wait between each line.
+    # This can help demos that display a lot of information at once.
+    [Alias('PauseBetweenLines')]
+    [Timespan]
+    $PauseBetweenLine = [timespan]"00:00:00.014",
 
     # If set, will automatically play demos.
     # Use -PauseBetweenStep to specify how long to wait between each step.
@@ -105,10 +111,10 @@
 
         $demoFile | Add-Member TypeStyle $TypeStyle -Force
         if ($TypeStyle -eq 'Letters' -and -not $TypeSpeed) {
-            $TypeSpeed = [timespan]::FromMilliseconds(1)
+            $TypeSpeed = [timespan]::FromMilliseconds(27)
         }
         elseif ($TypeStyle -eq 'Words' -and -not $TypeSpeed) {
-            $TypeSpeed = [timespan]::FromMilliseconds(30)
+            $TypeSpeed = [timespan]::FromMilliseconds(37)
         }
         $demoFile | Add-Member TypeSpeed $TypeSpeed -Force
 
@@ -129,6 +135,10 @@
             }
             $demoFile | Add-Member Autoplay $true -Force
             $demoFile | Add-Member PauseBetweenStep $PauseBetweenStep -Force
+        }
+
+        if ($PauseBetweenLine.TotalMilliseconds) {
+            $demoFile | Add-Member PauseBetweenLine $PauseBetweenLine -Force
         }
 
         if ($NonInteractive) {

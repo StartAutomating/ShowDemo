@@ -1,4 +1,5 @@
 function Import-Demo {
+
     <#
     .SYNOPSIS
         Imports Demos
@@ -18,6 +19,7 @@ function Import-Demo {
     [Parameter(Mandatory,ValueFromPipelineByPropertyName,ParameterSetName='DemoFile')]
     [ValidateScript({
     $validTypeList = [System.IO.FileInfo],[System.IO.DirectoryInfo],[System.Management.Automation.PathInfo],[System.Management.Automation.CommandInfo],[System.Management.Automation.PSModuleInfo],[System.String]
+    
     $thisType = $_.GetType()
     $IsTypeOk =
         $(@( foreach ($validType in $validTypeList) {
@@ -25,6 +27,7 @@ function Import-Demo {
                 $true;break
             }
         }))
+    
     if (-not $isTypeOk) {
         throw "Unexpected type '$(@($thisType)[0])'.  Must be 'System.IO.FileInfo','System.IO.DirectoryInfo','System.Management.Automation.PathInfo','System.Management.Automation.CommandInfo','psmoduleinfo','string'."
     }
@@ -35,6 +38,7 @@ function Import-Demo {
     [PSObject]
     $From    
     )
+
     begin {
         $ChapterExpression  = '^\s{0,}(?<cn>(?:\d+\.){1,})\s{0,}'
         $ValidDemoFile      = [regex]::new('\.demo\.(?>ps1|clixml)$','IgnoreCase')
@@ -63,6 +67,7 @@ function Import-Demo {
         
         # The easy one is Importing a demo .clixml
         function Import-DemoClixml {
+        
                     if ($FromFileInfo -match '\.(clix|clixml)$') {
                         return Import-Clixml -LiteralPath $FromFileInfo.FullName
                     }
@@ -70,6 +75,7 @@ function Import-Demo {
         }
         # The big one is Importing a demo from a script
         function Import-DemoScript {
+        
                     if (-not $FromScriptBlock) {
                         return
                     }
@@ -210,10 +216,12 @@ function Import-Demo {
                 
         }
     }
+
     process {
         # Since -From can be many things, but a demo has to be a ScriptBlock,
         # the purpose of this function is to essentially resolve many things to one or more ScriptBlocks.        
         $fromModule, $FromDirectory, $FromCommand, $FromFileInfo, $fromScriptBlock = $null, $null,$null, $null, $null
+
         # If -From was a string
         if ($From -is [string]) {
             # It could be a module, so check those first.
@@ -223,6 +231,7 @@ function Import-Demo {
                     $fromScriptBlock = try { [ScriptBlock]::create($from) } catch { }
                     if ($fromScriptBlock) { break }
                 }                
+
                 foreach ($loadedModule in @(Get-Module)) {
                     # If we find the module, don't try to resolve -From as a path
                     if ($loadedModule.Name -eq $from) { 
@@ -242,12 +251,14 @@ function Import-Demo {
                 return
             } while ($false)
         }
+
         if ($From -is [Management.Automation.PSModuleInfo]) {        
             # then, make -From a directory
             if ($from.Path) {
                 $from = Get-Item ($from.Path | Split-Path) -ErrorAction SilentlyContinue
             }
         }
+
         # If -From is a path
         if ($from -is [Management.Automation.PathInfo]) {
             $from = Get-Item -LiteralPath "$from" # turn it into a file or a directory
@@ -286,6 +297,7 @@ function Import-Demo {
                 $From = "$FromScriptBlock" # (stringified)
             }
             else {
+
                 # Otherwise, see if it has help and examples
                 $cmdHelp = Get-Help $from -ErrorAction Ignore
                 if ($cmdHelp -and $cmdHelp.examples.example) {
@@ -311,6 +323,7 @@ function Import-Demo {
             }
         }
         
+
         if ($fromScriptBlock) {
             . Import-DemoScript
         }
@@ -318,6 +331,7 @@ function Import-Demo {
             . Import-DemoClixml
         }        
     }
+
 }
 
 

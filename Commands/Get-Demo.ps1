@@ -1,9 +1,11 @@
 function Get-Demo {
+
     <#
     .SYNOPSIS
         Gets Demos
     .DESCRIPTION
         Gets PowerShell Demos.
+
         Demos located in ShowDemo and all modules that tag ShowDemo will be automatically discovered.
     .LINK
         Import-Demo
@@ -18,6 +20,7 @@ function Get-Demo {
     [PSObject]
     $From
     )
+
     begin {
         # If we have not initialized a cache and we're inside of a module
         if (-not $script:CachedDemos.Count -and $MyInvocation.MyCommand.ScriptBlock.Module) {         
@@ -33,5 +36,6 @@ function Get-Demo {
             $script:CachedDemos.Values
         }
     }
+
 }
 

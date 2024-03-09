@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<!-- Generated with EZOut 2.0.1: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
+<!-- Generated with EZOut 2.0.5: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
 <Configuration>
   <Controls>
     <Control>
@@ -78,6 +78,10 @@
             } else {
                 ''
             }
+        }
+
+        if ($demo.Interactive) {
+            [Console]::OutputEncoding = $OutputEncoding
         }
     </ScriptBlock>
               </ExpressionBinding>
@@ -261,7 +265,7 @@
                     $outputCopy.InputObject = ''
                     # If we're running interactively, write that to the console now
                     if ($demo.Interactive) {
-                        [Console]::Write((&amp; ${ShowDemo_Format-RichText} @outputCopy))
+                        [Console]::Write((&amp; ${ShowDemo_Format-RichText} @outputCopy) -join '')
                     } else {
                         # otherwise, add it to $strOut.
                         &amp; ${ShowDemo_Format-RichText} @outputCopy
@@ -288,8 +292,8 @@
                         if (-not $chunk) { continue }
                         # If running interactively,
                         if ($demo.Interactive) {
-                            # write it to the console
-                            [Console]::Write("$chunk")
+                            # write it to the console                            
+                            [Console]::Write("$chunk")                            
                         } else {
                             # otherwise, add it to $strOut
                             $chunk
@@ -368,12 +372,22 @@
             $PSStyle.OutputRendering = 'ANSI'
         }
 
-        if ($demo.Interactive) {            
+        if ($demo.Interactive) {
             [Console]::WriteLine()
-            # If we're running interactively, pipe it out.
-            Invoke-Expression -Command $demo.StepToRun *&gt;&amp;1 |
-                Out-String -OutVariable DemoStepOutput |
-                Out-Host
+            if ($demo.PauseBetweenLine) {
+                # If we're running interactively, pipe it out.
+                $DemoStepOutput = @(Invoke-Expression -Command $demo.StepToRun *&gt;&amp;1 |
+                    Out-String) -split '(?&gt;\r\n|\n)'
+                foreach ($demoOutputLine in $DemoStepOutput) {
+                    Start-Sleep -Milliseconds $demo.PauseBetweenLine.TotalMilliseconds
+                    Write-Host $demoOutputLine                    
+                }
+            } else {
+                # If we're running interactively, pipe it out.
+                Invoke-Expression -Command $demo.StepToRun *&gt;&amp;1 |
+                    Out-String -OutVariable DemoStepOutput |
+                    Out-Host
+            }            
         } 
         else{
             # Otherwise, pipe it to Out-String

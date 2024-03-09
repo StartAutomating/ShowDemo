@@ -47,6 +47,10 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                 ''
             }
         }
+
+        if ($demo.Interactive) {
+            [Console]::OutputEncoding = $OutputEncoding
+        }
     }
 
     Write-FormatViewExpression -If {
@@ -206,7 +210,7 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                     $outputCopy.InputObject = ''
                     # If we're running interactively, write that to the console now
                     if ($demo.Interactive) {
-                        [Console]::Write((Format-RichText @outputCopy))
+                        [Console]::Write((Format-RichText @outputCopy) -join '')
                     } else {
                         # otherwise, add it to $strOut.
                         Format-RichText @outputCopy
@@ -233,8 +237,8 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
                         if (-not $chunk) { continue }
                         # If running interactively,
                         if ($demo.Interactive) {
-                            # write it to the console
-                            [Console]::Write("$chunk")
+                            # write it to the console                            
+                            [Console]::Write("$chunk")                            
                         } else {
                             # otherwise, add it to $strOut
                             $chunk
@@ -305,12 +309,22 @@ Write-FormatView -TypeName DemoViewer -Name DemoViewer -AsControl -Action {
             $PSStyle.OutputRendering = 'ANSI'
         }
 
-        if ($demo.Interactive) {            
+        if ($demo.Interactive) {
             [Console]::WriteLine()
-            # If we're running interactively, pipe it out.
-            Invoke-Expression -Command $demo.StepToRun *>&1 |
-                Out-String -OutVariable DemoStepOutput |
-                Out-Host
+            if ($demo.PauseBetweenLine) {
+                # If we're running interactively, pipe it out.
+                $DemoStepOutput = @(Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String) -split '(?>\r\n|\n)'
+                foreach ($demoOutputLine in $DemoStepOutput) {
+                    Start-Sleep -Milliseconds $demo.PauseBetweenLine.TotalMilliseconds
+                    Write-Host $demoOutputLine                    
+                }
+            } else {
+                # If we're running interactively, pipe it out.
+                Invoke-Expression -Command $demo.StepToRun *>&1 |
+                    Out-String -OutVariable DemoStepOutput |
+                    Out-Host
+            }            
         } 
         else{
             # Otherwise, pipe it to Out-String
