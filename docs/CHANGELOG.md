@@ -1,3 +1,12 @@
+## ShowDemo 0.1.6:
+
+* Show-Demo Syncing Console Encoding ( Fixes #101 )
+* Show-Demo -PauseBetweenLine(s) ( Fixes #100 )
+* Adjusting Default Type Speed ( Fixes #97 )
+* Showing unknown steps in White, not Output ( Fixes #99 )
+
+---
+
 ## ShowDemo 0.1.5:
 
 * Demos are now more eventful (#66)
