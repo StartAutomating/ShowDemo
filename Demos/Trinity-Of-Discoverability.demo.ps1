@@ -40,9 +40,9 @@ Get-Help Show-Demo -Parameter *
 
 Get-Command -Module ShowDemo | Get-Member
 
-# Every object has members.  Let's get the members of ShowDemo
+# Every object has members.  Let's get the members the current process.
 
-Get-Module ShowDemo | Get-Member
+Get-Process -Id $PID | Get-Member
 
 # We can also get -Static members.  This is especially useful for classes.
 
