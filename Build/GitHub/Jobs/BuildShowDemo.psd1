@@ -60,6 +60,11 @@
             }
         },
         @{
+            name = 'Switch to latest branch (if on main)'
+            if   = '${{github.ref_name == ''main'' || github.ref_name == ''master''}}'
+            run  = 'git checkout -b latest'
+        },
+        @{
             'name'='Extract metadata (tags, labels) for Docker'
             'id'='meta'
             'uses'='docker/metadata-action@master'
@@ -68,23 +73,7 @@
             }
         },
         @{
-            if   = '${{github.ref_name == ''main'' || github.ref_name == ''master''}}'
-            run  = 'git checkout -b latest'            
-        },
-        @{
-            name = 'Build and push Docker image (from main)'
-            if   = '${{github.ref_name == ''main'' || github.ref_name == ''master'' || github.ref_name == ''latest''}}'
-            uses = 'docker/build-push-action@master'
-            'with'=@{
-                'context'='.'
-                'push'='true'
-                'tags'='latest'
-                'labels'='${{ steps.meta.outputs.labels }}'
-            }
-        },
-        @{
             name = 'Build and push Docker image (from branch)'
-            if   = '${{github.ref_name != ''main'' && github.ref_name != ''master'' && github.ref_name != ''latest''}}'
             uses = 'docker/build-push-action@master'
             with = @{
                 'context'='.'
