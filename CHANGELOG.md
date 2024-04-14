@@ -1,3 +1,19 @@
+> Like It? [Star It](https://github.com/StartAutomating/ShowDemo)
+> Love It? [Support It](https://github.com/sponsors/StartAutomating)
+
+---
+
+## ShowDemo 0.1.7:
+
+* ShowDemo in Docker (#103)
+  * Added Dockerfile (#104)
+  * Publishing all builds to GitHub Container Registry (#105)
+* Added Trinity of Discoverability Demo (#51)
+* Exporting $ShowDemo (#106)
+* Mounting as ShowDemo: (#107)
+
+---
+
 ## ShowDemo 0.1.6:
 
 * Show-Demo Syncing Console Encoding ( Fixes #101 )

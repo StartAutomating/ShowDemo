@@ -11,10 +11,12 @@ Push-Location ($PSScriptRoot | Split-Path)
 
 New-GitHubWorkflow -Job PowerShellStaticAnalysis, TestPowerShellOnLinux, TagReleaseAndPublish, BuildShowDemo -OutputPath @'
 .\.github\workflows\BuildShowDemo.yml
-'@ -Name "Build, Test, and Release ShowDemo" -On Push, PullRequest -Env @{
+'@ -Name "Build, Test, and Release ShowDemo" -On Push, PullRequest -Env ([Ordered]@{
     "AT_PROTOCOL_HANDLE" = "mrpowershell.bsky.social"
     "AT_PROTOCOL_APP_PASSWORD" = '${{ secrets.AT_PROTOCOL_APP_PASSWORD }}'
-}
+    "REGISTRY" = "ghcr.io"
+    "IMAGE_NAME" = '${{ github.repository }}'
+})
 
 Import-BuildStep -ModuleName GitPub
 
