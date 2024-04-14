@@ -68,6 +68,10 @@
             }
         },
         @{
+            if   = '${{github.ref_name == ''main'' || github.ref_name == ''master''}}'
+            run  = 'git checkout -b latest'            
+        },
+        @{
             name = 'Build and push Docker image (from main)'
             if   = '${{github.ref_name == ''main'' || github.ref_name == ''master'' || github.ref_name == ''latest''}}'
             uses = 'docker/build-push-action@master'
