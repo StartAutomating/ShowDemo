@@ -51,7 +51,18 @@
             id = 'PSA'
         }
         @{
-            'name'='Log in to the Container registry'
+            'name'='Log in to the Container registry (on main)'
+            if   = '${{github.event_name != ''pull_request'' && (github.ref_name == ''main'' || github.ref_name == ''master'' || github.ref_name == ''latest'')}}'
+            'uses'='docker/login-action@master'
+            'with'=@{
+                'registry'='${{ env.REGISTRY }}'
+                'username'='${{ github.actor }}'
+                'password'='${{ secrets.GHCR_TOKEN }}'
+            }
+        },
+        @{
+            'name'='Log in to the Container registry (on branch)'
+            if   = '${{github.ref_name != ''main'' && github.ref_name != ''master'' && github.ref_name == ''latest''}}'
             'uses'='docker/login-action@master'
             'with'=@{
                 'registry'='${{ env.REGISTRY }}'
@@ -66,7 +77,7 @@
             'with'=@{
                 'images'='${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}'
             }
-        },        
+        },
         @{
             name = 'Build and push Docker image (from main)'
             if   = '${{github.event_name != ''pull_request'' && (github.ref_name == ''main'' || github.ref_name == ''master'' || github.ref_name == ''latest'')}}'
