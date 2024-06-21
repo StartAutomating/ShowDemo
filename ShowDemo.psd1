@@ -6,6 +6,9 @@
     Guid             = 'c4516317-f99e-44cf-b138-d8c4d1eadf66'
     ModuleVersion    = '0.1.7'
     RootModule       = 'ShowDemo.psm1'
+    FunctionsToExport = @(
+        '*-Demo'
+    )
     FormatsToProcess = 'ShowDemo.format.ps1xml'
     TypesToProcess   = 'ShowDemo.types.ps1xml'        
     PrivateData      = @{
